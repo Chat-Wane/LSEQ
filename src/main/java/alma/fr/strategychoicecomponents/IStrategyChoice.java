@@ -22,7 +22,7 @@ public interface IStrategyChoice {
 	 *            replica informations to store
 	 * @return list of unique identifiers which can be used in logoot
 	 */
-	public Iterator<Positions> generateLineIdentifiers(Positions p,
+	public Iterator<Positions> generateIdentifiers(Positions p,
 			Positions q, Integer N, Replica rep);
 
 	/**

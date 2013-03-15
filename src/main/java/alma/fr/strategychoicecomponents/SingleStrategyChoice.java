@@ -22,9 +22,11 @@ public class SingleStrategyChoice implements IStrategyChoice {
 		this.strategy = strategy;
 	}
 
-	public Iterator<Positions> generateLineIdentifiers(Positions p,
-			Positions q, Integer N, Replica rep) {
-		return strategy.generateLineIdentifiers(p, q, N, rep);
+	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
+			Integer N, Replica rep) {
+		// #1: process the index and interval values
+		// #2: call the strategy
+		return null;
 	}
 
 	/** add the new id in the structure **/

@@ -1,6 +1,9 @@
 package alma.fr.strategiescomponents;
 
+import java.util.BitSet;
 import java.util.Iterator;
+
+import javax.swing.text.Position;
 
 import alma.fr.data.Positions;
 import alma.fr.logootenginecomponents.Replica;
@@ -16,7 +19,6 @@ public interface IIdProviderStrategy {
 	 * @param rep replica informations to store
 	 * @return list of unique identifiers which can be used in logoot
 	 */
-	public Iterator<Positions> generateLineIdentifiers(Positions p,
-			Positions q, Integer N, Replica rep);
-
+	public Iterator<Positions> generateIdentifiers(Positions p, Position q,
+			Integer N, Replica rep, BitSet interval, int index);
 }

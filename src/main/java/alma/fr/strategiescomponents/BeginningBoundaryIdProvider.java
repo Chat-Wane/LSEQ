@@ -1,9 +1,10 @@
 package alma.fr.strategiescomponents;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Iterator;
-import java.util.Random;
+
+import javax.swing.text.Position;
 
 import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
@@ -26,53 +27,54 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 		this.boundary = boundary;
 	}
 
-	public Iterator<Positions> generateLineIdentifiers(Positions p,
-			Positions q, Integer N, Replica rep) {
+	public Iterator<Positions> generateIdentifiers(Positions p, Position q,
+			Integer N, Replica rep, BitSet interval, int index) {
 
 		ArrayList<Positions> positions = new ArrayList<Positions>();
 
-		ArrayList<BigInteger> qprefix = q.prefix(q.size());
-		ArrayList<BigInteger> pprefix = p.prefix(p.size());
+		//#0 process the interval for random
+		// BigInteger step = interval.divide(BigInteger.valueOf(N));
+		// step = (step.min(boundary.getBoundary(index))).max(BigInteger
+		// .valueOf(1));
 
-		Integer index = 0;
-		BigInteger interval = new BigInteger("0");
-		BigInteger nBigInteger = new BigInteger(N.toString());
-		while (interval.compareTo(nBigInteger) == -1) {
-			++index;
+		//#1 Truncate tail
+		BitSet r = (BitSet) p;
+		Integer size = p.size();
+		// while (size > index) {
+		// r = r.shiftRight(base.getBitBase(size));
+		// --size;
+		// }
 
-			interval = base.count(qprefix, index).subtract(
-					base.count(pprefix, index)).subtract(new BigInteger("1"));
-		}
+		//while (size <= index) {
+		// r = r.multiply(base.getBase(size));
+		// ++size;
+		// }
 
-		BigInteger step = interval.divide(nBigInteger);
-		step = step.min(boundary.getBoundary(index));
-		step = step.max(new BigInteger("1"));
-
-		ArrayList<BigInteger> r = p.prefix(index);
-		Random rand = new Random();
-		for (int j = 0; j < N; ++j) {
-			Positions tempPositions = new Positions();
-			BigInteger randomInt;
-
-			if (!(step.compareTo(new BigInteger("1")) == 1)) { // step <= 1
-				randomInt = new BigInteger("1");
-			} else {
-				do {
-					randomInt = new BigInteger(step.subtract(
-							new BigInteger("1")).bitLength(), rand);
-
-				} while (randomInt
-						.compareTo(step.subtract(new BigInteger("1"))) >= 0);
-				randomInt = randomInt.add(new BigInteger("1"));
-			}
-
-			base.add(r, randomInt);
-
-			tempPositions.constructIdentifier(r, p, q, rep);
-			positions.add(tempPositions);
-
-			base.add(r, step.subtract(randomInt));
-		}
+		//#2 create position by adding a random value; N times
+		// for (int j = 0; j < N; ++j) {
+		//
+		// BigInteger randomInt;
+		//
+		// // Random
+		// if (!(step.compareTo(BigInteger.valueOf(1)) == 1)) { // step <= 1
+		// randomInt = BigInteger.valueOf(1);
+		// } else {
+		// do {
+		// randomInt = new BigInteger(step.subtract(
+		// BigInteger.valueOf(1)).bitLength(), rand);
+		//
+		// } while (randomInt.compareTo(step.subtract(BigInteger
+		// .valueOf(1))) >= 0);
+		// randomInt = randomInt.add(BigInteger.valueOf(1));
+		// }
+		// // Construct
+		// BigInteger newR = base.add(r, randomInt);
+		// rep.setMyClock(rep.getClock() + 1);
+		// Positions tempPositions = new Positions(newR, rep);
+		// positions.add(tempPositions);
+		//
+		// r = BaseDouble.add(r, index, index, step);
+		// }
 
 		return positions.iterator();
 	}

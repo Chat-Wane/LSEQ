@@ -1,10 +1,8 @@
 package alma.fr.strategychoicecomponents;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Random;
 
 import alma.fr.basecomponents.IBase;
@@ -19,8 +17,10 @@ public class RandomStrategyChoice implements IStrategyChoice {
 
 	private Integer date = 0;
 	
-	Map<Integer, IIdProviderStrategy> strategies ;
+	BitSet strategies ;
 
+	static final Random r = new Random();
+	
 	@Inject
 	IBase base;
 
@@ -34,7 +34,7 @@ public class RandomStrategyChoice implements IStrategyChoice {
 		this.base = base;
 		this.strategy1 = strategy1;
 		this.strategy2 = strategy2;
-		strategies = new HashMap<Integer, IIdProviderStrategy>();
+		strategies = new BitSet();
 	}
 
 	/** add the new id in the structure **/
@@ -71,31 +71,17 @@ public class RandomStrategyChoice implements IStrategyChoice {
 		spectrum.remove(id);
 	}
 
-	public Iterator<Positions> generateLineIdentifiers(Positions p,
+	public Iterator<Positions> generateIdentifiers(Positions p,
 			Positions q, Integer N, Replica rep) {
-		ArrayList<BigInteger> qprefix = q.prefix(q.size());
-		ArrayList<BigInteger> pprefix = p.prefix(p.size());
 
-		Integer index = 0;
-		BigInteger interval = new BigInteger("0");
-		BigInteger nBigInteger = new BigInteger(N.toString());
-		while (interval.compareTo(nBigInteger) == -1) {
-			++index;
-
-			interval = base.count(qprefix, index).subtract(
-					base.count(pprefix, index)).subtract(new BigInteger("1"));
-		}
-
-		Random r = new Random();
-		if (!strategies.containsKey(index)) {
-			if (r.nextInt(2) == 0) {
-				strategies.put(index, strategy1);
-			} else {
-				strategies.put(index, strategy2);
-			}
-		}
-
-		return strategies.get(index).generateLineIdentifiers(p, q, N, rep);
+		//#1 count interval between p and q, until itz enough
+		//#1 a: obtain index value
+		//#1 b: obtain interval value 
+		
+		//#2 if already setted value in strategies
+		//#2a then use the read strategy
+		//#2b else random & use strategy
+		return null;
 	}
 
 	public void incDate() {

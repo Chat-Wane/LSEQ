@@ -1,7 +1,6 @@
 package alma.fr.basecomponents;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
+import java.util.BitSet;
 
 public interface IBase {
 
@@ -12,28 +11,53 @@ public interface IBase {
 	 * @param depth
 	 * @return base
 	 */
-	BigInteger getBase(Integer depth);
+	BitSet getBase(Integer depth);
 
-	/** 
-	 * Convert in base 10 the arrayList 
-	 * @param r 
-	 * @param index size of r which are considerate
-	 * @return
+	/**
+	 * The number of bit used at a given depth
+	 * 
+	 * @param depth
+	 * @return bit number
 	 */
-	BigInteger count(ArrayList<BigInteger> r,Integer index);
-	
+	Integer getBitBase(Integer depth);
+
+	/**
+	 * the number of bit at depth 1
+	 * 
+	 * @return bit number
+	 */
+	Integer getBaseBase();
+
 	/**
 	 * Substract value to r
+	 * 
 	 * @param r
 	 * @param value
 	 */
-	void sub(ArrayList<BigInteger> r, BigInteger value);
-	
+	void sub(BitSet r, BitSet value);
+
 	/**
 	 * Add value to r
+	 * 
 	 * @param r
 	 * @param value
 	 */
-	void add(ArrayList<BigInteger> r, BigInteger value);
-	
+	void add(BitSet r, BitSet value);
+
+	/**
+	 * Process the interval (i.e. number of id possible) between p and q, p <_id
+	 * q.
+	 * 
+	 * @param p
+	 *            previous digit
+	 * @param q
+	 *            next digit
+	 * @param index
+	 *            depth of processing
+	 * @param previousValue
+	 *            value processed at depth-1, start to BigInteger.ZERO
+	 * @return the interval at given depth
+	 */
+	BitSet interval(BitSet p, BitSet q, Integer index, BitSet previousValue);
+
 }

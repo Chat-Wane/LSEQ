@@ -1,13 +1,12 @@
 package alma.fr.logootenginecomponents;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import alma.fr.basecomponents.IBase;
-import alma.fr.data.DSCPosition;
 import alma.fr.data.Positions;
 import alma.fr.strategychoicecomponents.IStrategyChoice;
 
@@ -36,12 +35,8 @@ public class LogootEngine implements ILogootEngine {
 		this.base = base;
 		this.strategyChoice = strategyChoice;
 
-		Positions first = new Positions();
-		first.add(new DSCPosition(new BigInteger("0"), new BigInteger("-666"),
-				new BigInteger("-666")));
-		Positions last = new Positions();
-		last.add(new DSCPosition(this.base.getBase(1), new BigInteger("-666"),
-				new BigInteger("-666")));
+		Positions first = new Positions(new BitSet(base.getBaseBase()), replica);
+		Positions last = new Positions(base.getBase(1), replica);
 
 		idTable = new ArrayList<Positions>();
 		idTable.add(first);
@@ -53,7 +48,7 @@ public class LogootEngine implements ILogootEngine {
 	public void deliver(MyPatch patch) {
 
 		boolean one_insert = false;
-		
+
 		for (MyDelta delta : patch) {
 			Integer position;
 
@@ -63,8 +58,8 @@ public class LogootEngine implements ILogootEngine {
 				position = -Collections.binarySearch(idTable, delta.getId()) - 1;
 				doc.add(position - 1, delta.getContent());
 				idTable.add(position, delta.getId());
-				strategyChoice.add(idTable.get(position - 1), idTable
-						.get(position), idTable.get(position + 1));
+				strategyChoice.add(idTable.get(position - 1),
+						idTable.get(position), idTable.get(position + 1));
 				break;
 
 			case DELETE:
@@ -115,9 +110,10 @@ public class LogootEngine implements ILogootEngine {
 				// foreach line changed (<=> delete & insert )
 				for (int k = 0; k < deltas.get(j).getOriginal().getLines()
 						.size(); ++k) { // deleted lines
-					MyDelta md = new MyDelta(Operation.DELETE, idTable
-							.get(deltas.get(j).getOriginal().getPosition() + k
-									+ 1), "");
+					MyDelta md = new MyDelta(Operation.DELETE,
+							idTable.get(deltas.get(j).getOriginal()
+									.getPosition()
+									+ k + 1), "");
 					patch.add(md);
 				}
 
@@ -134,9 +130,10 @@ public class LogootEngine implements ILogootEngine {
 
 				for (int k = 0; k < deltas.get(j).getOriginal().getLines()
 						.size(); ++k) {
-					MyDelta md = new MyDelta(Operation.DELETE, idTable
-							.get(deltas.get(j).getOriginal().getPosition() + k
-									+ 1), "");
+					MyDelta md = new MyDelta(Operation.DELETE,
+							idTable.get(deltas.get(j).getOriginal()
+									.getPosition()
+									+ k + 1), "");
 					patch.add(md);
 				}
 				break;
@@ -192,13 +189,12 @@ public class LogootEngine implements ILogootEngine {
 	 * Factorize code for an insert operation
 	 */
 	private Iterator<Positions> insert(Delta delta) {
-		Positions previous;
-		Positions next;
-		previous = idTable.get(delta.getOriginal().getPosition());
-		next = idTable.get(delta.getOriginal().getPosition()
+
+		Positions previous = idTable.get(delta.getOriginal().getPosition());
+		Positions next = idTable.get(delta.getOriginal().getPosition()
 				+ delta.getOriginal().getLines().size() + 1);
 
-		return strategyChoice.generateLineIdentifiers(previous, next, delta
+		return strategyChoice.generateIdentifiers(previous, next, delta
 				.getRevised().getLines().size(), replica);
 	}
 }
