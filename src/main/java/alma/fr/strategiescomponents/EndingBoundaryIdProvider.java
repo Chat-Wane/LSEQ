@@ -14,9 +14,9 @@ import alma.fr.strategiescomponents.boundary.IBoundary;
 import com.google.inject.Inject;
 
 public class EndingBoundaryIdProvider implements IIdProviderStrategy {
-	
+
 	private Random rand = new Random();
-	
+
 	@Inject
 	private IBase base;
 
@@ -35,14 +35,25 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 
 		// #0 process the interval for random
 		BigInteger step = interval.divide(BigInteger.valueOf(N));
+
 		step = (step.min(boundary.getBoundary(index))).max(BigInteger
 				.valueOf(1));
 
+//		System.out.println("============================");
+//		System.out.println("i" + interval);
+//		System.out.println("s" + step);
+//		System.out.println("p" + p);
+//		System.out.println("q" + q);
+//		System.out.println("============================");
 		// #1 Truncate tail or add bits
 		int nextBitCount = q.getD().bitLength() - 1;
 		int diffBitCount = nextBitCount - base.getSumBit(index);
 
 		BigInteger r = q.getD().shiftRight(diffBitCount);
+		//if (diffBitCount < 0) {
+		//	r = r.add(BigInteger.valueOf(2).pow(-diffBitCount)
+		//			.subtract(BigInteger.ONE)); // fill wiz 1
+		//}
 
 		// #2 create position by adding a random value; N times
 		for (int j = 0; j < N; ++j) {
@@ -67,7 +78,7 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 			positions.add(tempPositions);
 			r = base.sub(r, step);
 		}
-		
+
 		Collections.reverse(positions);
 		return positions.iterator();
 	}

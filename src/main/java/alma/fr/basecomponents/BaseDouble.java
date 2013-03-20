@@ -56,9 +56,9 @@ public class BaseDouble implements IBase {
 		BigInteger next;
 		if (nextBitLength < bitBaseSum) { // Add 1 and +1 to result
 			next = q.shiftLeft(bitBaseSum - nextBitLength);
-			next = next.add(BigInteger.valueOf(2)
-					.pow(bitBaseSum - nextBitLength).subtract(BigInteger.ONE));
-			result = result.add(BigInteger.ONE);
+			//next = next.add(BigInteger.valueOf(2)
+			//		.pow(bitBaseSum - nextBitLength).subtract(BigInteger.ONE));
+			//result = result.add(BigInteger.ONE);
 		} else {
 			next = q.shiftRight(nextBitLength - bitBaseSum);
 		}

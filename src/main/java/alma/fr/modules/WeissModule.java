@@ -6,6 +6,7 @@ import alma.fr.basecomponents.BaseSimple;
 import alma.fr.basecomponents.Basebase;
 import alma.fr.basecomponents.IBase;
 import alma.fr.strategiescomponents.BeginningBoundaryIdProvider;
+import alma.fr.strategiescomponents.EndingBoundaryIdProvider;
 import alma.fr.strategiescomponents.IIdProviderStrategy;
 import alma.fr.strategiescomponents.boundary.BoundaryValue;
 import alma.fr.strategiescomponents.boundary.ConstantBoundary;
@@ -22,8 +23,8 @@ import com.google.inject.Module;
 public class WeissModule implements Module {
 
 	public void configure(Binder binder) {
-		Integer baseBase = new Integer(64);
-		BigInteger boundary = new BigInteger("1000000");
+		Integer baseBase = new Integer(10);
+		BigInteger boundary = new BigInteger("10");
 
 		/* BASE */
 		binder.bind(Integer.class).annotatedWith(Basebase.class)
@@ -37,7 +38,7 @@ public class WeissModule implements Module {
 
 		/* STRATEGY CHOICE */
 		binder.bind(IIdProviderStrategy.class).to(
-				BeginningBoundaryIdProvider.class);
+				EndingBoundaryIdProvider.class);
 		binder.bind(IStrategyChoice.class).to(SingleStrategyChoice.class);
 
 	}

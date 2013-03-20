@@ -30,7 +30,6 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
 			Integer N, Replica rep, BigInteger interval, int index) {
-
 		ArrayList<Positions> positions = new ArrayList<Positions>();
 
 		// #0 process the interval for random
