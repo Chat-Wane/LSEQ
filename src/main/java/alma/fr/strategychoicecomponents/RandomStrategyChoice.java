@@ -1,5 +1,6 @@
 package alma.fr.strategychoicecomponents;
 
+import java.math.BigInteger;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,11 +17,11 @@ public class RandomStrategyChoice implements IStrategyChoice {
 	private HashMap<Positions, FakeListNode> spectrum = new HashMap<Positions, FakeListNode>();
 
 	private Integer date = 0;
-	
-	BitSet strategies ;
+
+	BitSet strategies;
 
 	static final Random r = new Random();
-	
+
 	@Inject
 	IBase base;
 
@@ -71,17 +72,34 @@ public class RandomStrategyChoice implements IStrategyChoice {
 		spectrum.remove(id);
 	}
 
-	public Iterator<Positions> generateIdentifiers(Positions p,
-			Positions q, Integer N, Replica rep) {
+	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
+			Integer N, Replica rep) {
 
-		//#1 count interval between p and q, until itz enough
-		//#1 a: obtain index value
-		//#1 b: obtain interval value 
-		
-		//#2 if already setted value in strategies
-		//#2a then use the read strategy
-		//#2b else random & use strategy
-		return null;
+		// #1 count interval between p and q, until itz enough
+		BigInteger interval = BigInteger.ZERO;
+		int index = 0;
+		while (BigInteger.valueOf(N).compareTo(interval) < 0) {
+			// #1 a: obtain index value
+			++index;
+			// #1 b: obtain interval value
+			interval = base.interval(p.getD(), q.getD(), index);
+		}
+
+		// #2 if already setted value in strategies
+		while (strategies.size() < index) {
+			// #2b else random & use strategy
+			if (r.nextBoolean()) {
+				strategies.set(strategies.size());
+			} else {
+				strategies.clear(strategies.size());
+			}
+		}
+		// #3 chose the strategy
+		if (strategies.get(index)) {
+			return strategy1.generateIdentifiers(p, q, N, rep, interval, index);
+		} else {
+			return strategy2.generateIdentifiers(p, q, N, rep, interval, index);
+		}
 	}
 
 	public void incDate() {

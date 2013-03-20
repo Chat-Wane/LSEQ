@@ -1,23 +1,23 @@
 package alma.fr.data;
 
-import java.util.BitSet;
+import java.math.BigInteger;
 
 import alma.fr.logootenginecomponents.Replica;
 
-public class Positions extends BitSet implements Comparable<Positions> {
+public class Positions implements Comparable<Positions> {
 
-	private Integer s;
-	private Integer c;
+	private final BigInteger d;
+	private final Integer s;
+	private final Integer c;
 
-	private static final long serialVersionUID = 1L;
-
-	public Positions(BitSet r, Replica rep) {
-		super(r.size());
-		this.or(r);
-
+	public Positions(BigInteger r, int bitSize, Replica rep) {
+		d = r.setBit(bitSize); // set the departure bit to 1
 		s = rep.getId();
 		c = rep.getClock();
+	}
 
+	public BigInteger getD() {
+		return d;
 	}
 
 	public Integer getC() {
@@ -28,21 +28,31 @@ public class Positions extends BitSet implements Comparable<Positions> {
 		return s;
 	}
 
-	public void setC(Integer c) {
-		this.c = c;
-	}
-
-	public void setS(Integer s) {
-		this.s = s;
-	}
-
 	public int compareTo(Positions o) {
 		// #1 truncate
+		int myBitLength = d.bitLength();
+		int otBitLength = o.d.bitLength();
+
+		int difBitLength = myBitLength - otBitLength;
+
+		BigInteger other;
+		BigInteger mine;
+		if (difBitLength > 0) { // mine > other (in size)
+			other = o.d;
+			mine = d.shiftRight(difBitLength);
+		} else {
+			other = o.d.shiftRight(-difBitLength);
+			mine = d;
+		}
 		// #2 compare digit
+		int comp = mine.compareTo(other);
+		if (comp != 0) {
+			return comp;
+		}
 
 		// #3 compare s and c
-		int comp = s.compareTo(o.s);
-		if (comp != 0) { // C != o.C
+		comp = s.compareTo(o.s);
+		if (comp != 0) { // s != o.s
 			return comp;
 		} else {
 			comp = c.compareTo(o.c);
@@ -52,9 +62,9 @@ public class Positions extends BitSet implements Comparable<Positions> {
 		}
 
 		// #4 compare size
-		if (size() > o.size()) {
+		if (myBitLength > otBitLength) {
 			return 1;
-		} else if (size() < o.size()) {
+		} else if (myBitLength < otBitLength) {
 			return -1;
 		}
 
@@ -63,7 +73,7 @@ public class Positions extends BitSet implements Comparable<Positions> {
 
 	@Override
 	public String toString() {
-		return "<d" + this.toString() + "; s " + s + "; c " + c.toString()
+		return "<d" + d.toString() + "; s " + s + "; c " + c.toString()
 				+ ">";
 	}
 

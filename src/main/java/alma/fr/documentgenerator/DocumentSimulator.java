@@ -9,21 +9,22 @@ public class DocumentSimulator {
 
 	private int nbPatch = 100;
 
-	public DocumentSimulator() {
+	IDeltasGenerator deltaGenerator = new BeginningGenerator();
+
+	public DocumentSimulator(IDeltasGenerator generator) {
 		nbLine = 0;
+		deltaGenerator = generator;
 	}
 
 	public void run(LogootEngine logootEngine) {
-
-		IDeltasGenerator deltaGenerator = new BeginningGenerator();
 
 		for (int i = 0; i < nbPatch; ++i) {
 			MyPatch patch = logootEngine.generatePatch(deltaGenerator
 					.getDeltas(1));
 			logootEngine.deliver(patch);
 			++nbLine;
-			
-//System.out.println(i);
+
+			// System.out.println(i);
 		}
 
 	}

@@ -1,8 +1,10 @@
 package alma.fr.strategychoicecomponents;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
 import alma.fr.logootenginecomponents.Replica;
 import alma.fr.strategiescomponents.IIdProviderStrategy;
@@ -18,15 +20,32 @@ public class SingleStrategyChoice implements IStrategyChoice {
 	IIdProviderStrategy strategy;
 
 	@Inject
-	public SingleStrategyChoice(IIdProviderStrategy strategy) {
+	IBase base;
+
+	@Inject
+	public SingleStrategyChoice(IIdProviderStrategy strategy, IBase base) {
 		this.strategy = strategy;
 	}
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
 			Integer N, Replica rep) {
 		// #1: process the index and interval values
+		BigInteger interval = BigInteger.ZERO;
+		int index = 0;
+		while (BigInteger.valueOf(N).compareTo(interval) > 0) {
+			// #1 a: obtain index value
+			++index;
+			// #1 b: obtain interval value
+			interval = base.interval(p.getD(), q.getD(), index);
+		}
+//		System.out.println("=========================");
+//		System.out.println(index);
+//		System.out.println(interval);
+//		System.out.println(p);
+//		System.out.println(q);
+//		System.out.println("=========================");
 		// #2: call the strategy
-		return null;
+		return strategy.generateIdentifiers(p, q, N, rep, interval, index);
 	}
 
 	/** add the new id in the structure **/

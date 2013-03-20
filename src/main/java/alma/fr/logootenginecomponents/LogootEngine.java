@@ -1,7 +1,7 @@
 package alma.fr.logootenginecomponents;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -35,8 +35,19 @@ public class LogootEngine implements ILogootEngine {
 		this.base = base;
 		this.strategyChoice = strategyChoice;
 
-		Positions first = new Positions(new BitSet(base.getBaseBase()), replica);
-		Positions last = new Positions(base.getBase(1), replica);
+		Replica fakeReplica = new Replica();
+		fakeReplica.setClock(-666);
+		fakeReplica.setId(-666);
+
+		Positions first = new Positions(BigInteger.ZERO, base.getBaseBase(),
+				fakeReplica);
+
+		fakeReplica.setClock(666);
+		fakeReplica.setId(666);
+
+		Positions last = new Positions(BigInteger.valueOf(2)
+				.pow(this.base.getBaseBase()).subtract(BigInteger.ONE),
+				base.getBaseBase(), fakeReplica);
 
 		idTable = new ArrayList<Positions>();
 		idTable.add(first);
@@ -52,6 +63,9 @@ public class LogootEngine implements ILogootEngine {
 		for (MyDelta delta : patch) {
 			Integer position;
 
+			// System.out.println(idTable);
+			// System.out.println("==========");
+			// System.out.println(delta.getId());
 			switch (delta.getType()) {
 			case INSERT:
 				one_insert = true;

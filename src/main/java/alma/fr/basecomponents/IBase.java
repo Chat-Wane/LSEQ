@@ -1,17 +1,16 @@
 package alma.fr.basecomponents;
 
-import java.util.BitSet;
+import java.math.BigInteger;
 
 public interface IBase {
 
 	/**
-	 * function giving the common base of the logoot engine at a certain
-	 * id-depth
+	 * Return the number of bit to a depth
 	 * 
 	 * @param depth
-	 * @return base
+	 * @return bit number
 	 */
-	BitSet getBase(Integer depth);
+	public Integer getSumBit(Integer depth);
 
 	/**
 	 * The number of bit used at a given depth
@@ -33,16 +32,18 @@ public interface IBase {
 	 * 
 	 * @param r
 	 * @param value
+	 * @return r-value
 	 */
-	void sub(BitSet r, BitSet value);
+	BigInteger sub(BigInteger r, BigInteger value);
 
 	/**
 	 * Add value to r
 	 * 
 	 * @param r
 	 * @param value
+	 * @return r+value
 	 */
-	void add(BitSet r, BitSet value);
+	BigInteger add(BigInteger r, BigInteger value);
 
 	/**
 	 * Process the interval (i.e. number of id possible) between p and q, p <_id
@@ -54,10 +55,8 @@ public interface IBase {
 	 *            next digit
 	 * @param index
 	 *            depth of processing
-	 * @param previousValue
-	 *            value processed at depth-1, start to BigInteger.ZERO
 	 * @return the interval at given depth
 	 */
-	BitSet interval(BitSet p, BitSet q, Integer index, BitSet previousValue);
+	BigInteger interval(BigInteger p, BigInteger q, Integer index);
 
 }

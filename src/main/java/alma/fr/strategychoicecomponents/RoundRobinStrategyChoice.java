@@ -1,5 +1,6 @@
 package alma.fr.strategychoicecomponents;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -31,14 +32,28 @@ public class RoundRobinStrategyChoice implements IStrategyChoice {
 		this.strategy2 = strategy2;
 	}
 
-	public Iterator<Positions> generateIdentifiers(Positions p,
-			Positions q, Integer N, Replica rep) {
-		//#1 cf random, but instead of rand, use modulo
-		return null;
+	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
+			Integer N, Replica rep) {
 
+		// #1 count interval between p and q, until itz enough
+		BigInteger interval = BigInteger.ZERO;
+		int index = 0;
+		while (BigInteger.valueOf(N).compareTo(interval) < 0) {
+			// #1 a: obtain index value
+			++index;
+			// #1 b: obtain interval value
+			interval = base.interval(p.getD(), q.getD(), index);
+		}
+
+		// #2 chose the strategy
+		if (index % 2 == 0) { // pair
+			return strategy1.generateIdentifiers(p, q, N, rep, interval, index);
+		} else { // impair
+			return strategy2.generateIdentifiers(p, q, N, rep, interval,
+					index);
+		}
 	}
 
-	
 	/** add the new id in the structure **/
 	public void add(Positions prev, Positions id, Positions next) {
 
