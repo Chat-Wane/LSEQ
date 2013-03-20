@@ -38,12 +38,7 @@ public class SingleStrategyChoice implements IStrategyChoice {
 			// #1 b: obtain interval value
 			interval = base.interval(p.getD(), q.getD(), index);
 		}
-//		System.out.println("=========================");
-//		System.out.println(index);
-//		System.out.println(interval);
-//		System.out.println(p);
-//		System.out.println(q);
-//		System.out.println("=========================");
+
 		// #2: call the strategy
 		return strategy.generateIdentifiers(p, q, N, rep, interval, index);
 	}

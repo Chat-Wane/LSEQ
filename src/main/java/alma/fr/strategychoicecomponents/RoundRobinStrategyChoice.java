@@ -38,7 +38,7 @@ public class RoundRobinStrategyChoice implements IStrategyChoice {
 		// #1 count interval between p and q, until itz enough
 		BigInteger interval = BigInteger.ZERO;
 		int index = 0;
-		while (BigInteger.valueOf(N).compareTo(interval) < 0) {
+		while (BigInteger.valueOf(N).compareTo(interval) > 0) {
 			// #1 a: obtain index value
 			++index;
 			// #1 b: obtain interval value
@@ -49,8 +49,7 @@ public class RoundRobinStrategyChoice implements IStrategyChoice {
 		if (index % 2 == 0) { // pair
 			return strategy1.generateIdentifiers(p, q, N, rep, interval, index);
 		} else { // impair
-			return strategy2.generateIdentifiers(p, q, N, rep, interval,
-					index);
+			return strategy2.generateIdentifiers(p, q, N, rep, interval, index);
 		}
 	}
 

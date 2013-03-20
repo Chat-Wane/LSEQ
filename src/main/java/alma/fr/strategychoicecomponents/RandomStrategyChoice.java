@@ -78,7 +78,7 @@ public class RandomStrategyChoice implements IStrategyChoice {
 		// #1 count interval between p and q, until itz enough
 		BigInteger interval = BigInteger.ZERO;
 		int index = 0;
-		while (BigInteger.valueOf(N).compareTo(interval) < 0) {
+		while (BigInteger.valueOf(N).compareTo(interval) > 0) {
 			// #1 a: obtain index value
 			++index;
 			// #1 b: obtain interval value
