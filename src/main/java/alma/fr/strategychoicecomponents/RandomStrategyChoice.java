@@ -35,7 +35,7 @@ public class RandomStrategyChoice implements IStrategyChoice {
 		this.base = base;
 		this.strategy1 = strategy1;
 		this.strategy2 = strategy2;
-		strategies = new BitSet();
+		strategies = new BitSet(0);
 	}
 
 	/** add the new id in the structure **/
@@ -85,13 +85,17 @@ public class RandomStrategyChoice implements IStrategyChoice {
 			interval = base.interval(p.getD(), q.getD(), index);
 		}
 
-		// #2 if already setted value in strategies
-		while (strategies.size() < index) {
-			// #2b else random & use strategy
-			if (r.nextBoolean()) {
-				strategies.set(strategies.size());
-			} else {
-				strategies.clear(strategies.size());
+		// #2 if not already setted value in strategies
+		// random a full 64 bits of strategies, bitsize.size limitation
+		if (index >= strategies.size()) {
+			int sizeBefore = strategies.size();
+			strategies.set(strategies.size());
+			for (int j = sizeBefore; j < strategies.size(); ++j) {
+				if (r.nextBoolean()) {
+					strategies.set(j);
+				} else {
+					strategies.clear(j);
+				}
 			}
 		}
 		// #3 chose the strategy

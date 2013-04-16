@@ -1,6 +1,27 @@
 LSEQ: CRDT for sequences
 ========================
 
+This framework allows the developper to configure underlying components of
+its allocation strategy and to measure the size of identifiers generated
+(see [package module](/src/main/java/alma/fr/modules/)). Available components are
+divided in 4 categories:
+*    Base: Double or Constant (parameter _departure base_)
+*    Boundary: Double or Constant (parameter _departure boundary_)
+*    Allocation strategies: Beginning (_boundary+_) or Ending (_boundary-_) (parameters _base_, _boundary_)
+*    Strategy Choice: Single, Round-Robin or Random (parameter(s) _allocation strategie(s)_)
+
+Of course, the framework also allows to develop custom components.
+
+Run
+---
+The frameworks gives two examples of launching:
+*    On synthetic sequences (Front, Queue or Random)
+*    On Wikipedia pages 
+
+Once again, custom synthetic sequences can be added, and other kinds of real
+collaborative edited documents complying with the provided interface can be
+added.
+
 Synthetic Documents Experiments
 -------------------------------
 

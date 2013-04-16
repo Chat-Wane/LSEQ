@@ -27,15 +27,6 @@ import com.google.inject.Injector;
  */
 public class App {
 	public static void main(String[] args) {
-//		// ID STRATEGIEZ
-//		try {
-//			Thread.currentThread();
-//			// do what you want to do before sleeping
-//			Thread.sleep(10000);// sleep for 1000 ms
-//			// do what you want to do after sleeptig
-//		} catch (InterruptedException ie) {
-//			// If this thread was intrrupted by nother thread
-//		}
 
 		Injector injector;
 		LogootEngine logootEngine;
@@ -46,7 +37,7 @@ public class App {
 		// injector = Guice.createInjector(new WeissModule());
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
-		//injector = Guice.createInjector(new GreedDoubleModule());
+		// injector = Guice.createInjector(new GreedDoubleModule());
 		 injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
@@ -54,7 +45,7 @@ public class App {
 
 		BeginningGenerator bg = new BeginningGenerator();
 		EndingGenerator eg = new EndingGenerator();
-		ds = new DocumentSimulator(eg);
+		ds = new DocumentSimulator(bg);
 
 		while (true) {
 			ds.setNbPatch(10000);
