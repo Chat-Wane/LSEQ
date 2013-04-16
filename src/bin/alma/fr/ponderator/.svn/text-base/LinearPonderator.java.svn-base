@@ -1,0 +1,10 @@
+package alma.fr.ponderator;
+
+public class LinearPonderator implements IPonderator {
+
+	@Override
+	public Double getPonderation(Double value) {
+		return value;
+	}
+
+}

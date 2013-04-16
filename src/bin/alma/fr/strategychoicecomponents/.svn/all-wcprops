@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/weeklyreports/!svn/ver/112/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents
+END
+WindowStrategyChoice.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/weeklyreports/!svn/ver/87/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/WindowStrategyChoice.java
+END
+IStrategyChoice.java
+K 25
+svn:wc:ra_dav:version-url
+V 122
+/svn/weeklyreports/!svn/ver/112/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/IStrategyChoice.java
+END
+FakeListNode.java
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/svn/weeklyreports/!svn/ver/61/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/FakeListNode.java
+END
+RandomStrategyChoice.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/weeklyreports/!svn/ver/112/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/RandomStrategyChoice.java
+END
+Strat1.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/weeklyreports/!svn/ver/59/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/Strat1.java
+END
+RoundRobinStrategyChoice.java
+K 25
+svn:wc:ra_dav:version-url
+V 130
+/svn/weeklyreports/!svn/ver/87/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/RoundRobinStrategyChoice.java
+END
+SingleStrategyChoice.java
+K 25
+svn:wc:ra_dav:version-url
+V 127
+/svn/weeklyreports/!svn/ver/112/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/SingleStrategyChoice.java
+END
+Strat2.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/weeklyreports/!svn/ver/59/trunk/LogootComponents/src/main/java/alma/fr/strategychoicecomponents/Strat2.java
+END

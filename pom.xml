@@ -56,7 +56,7 @@
          </descriptorRefs>
          <archive>
            <manifest>
-             <mainClass>alma.fr.App</mainClass>
+             <mainClass>alma.fr.App3</mainClass>
            </manifest>
          </archive>
        </configuration>

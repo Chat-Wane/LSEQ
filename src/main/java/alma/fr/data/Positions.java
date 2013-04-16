@@ -1,60 +1,47 @@
 package alma.fr.data;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import alma.fr.logootenginecomponents.Replica;
 
-public class Positions implements Comparable<Positions> {
+public class Positions extends ArrayList<BigInteger> implements
+		Comparable<Positions> {
 
-	private final BigInteger d;
-	private final Integer s;
-	private final Integer c;
+	private BigInteger s;
+	private BigInteger c;
 
-	public Positions(BigInteger r, int bitSize, Replica rep) {
-		d = r.setBit(bitSize); // set the departure bit to 1. Thus the 0 in
-								// front won't be automatically truncated by
-								// BigInteger
-		s = rep.getId();
-		c = rep.getClock();
-	}
+	private static final long serialVersionUID = 1L;
 
-	public BigInteger getD() {
-		return d;
-	}
-
-	public Integer getC() {
+	public BigInteger getC() {
 		return c;
 	}
-
-	public Integer getS() {
+	
+	public BigInteger getS() {
 		return s;
 	}
-
+	
+	public void setC(BigInteger c) {
+		this.c = c;
+	}
+	
+	public void setS(BigInteger s) {
+		this.s = s;
+	}
+	
 	public int compareTo(Positions o) {
-		// #1 truncate
-		int myBitLength = d.bitLength();
-		int otBitLength = o.d.bitLength();
+		int minSize = Math.min(size(), o.size());
 
-		int difBitLength = myBitLength - otBitLength;
-
-		BigInteger other;
-		BigInteger mine;
-		if (difBitLength > 0) { // mine > other (in size)
-			other = o.d;
-			mine = d.shiftRight(difBitLength);
-		} else {
-			other = o.d.shiftRight(-difBitLength);
-			mine = d;
-		}
-		// #2 compare digit
-		int comp = mine.compareTo(other);
-		if (comp != 0) {
-			return comp;
+		for (int i = 0; i < minSize; i++) {
+			int comp = get(i).compareTo(o.get(i));
+			if (comp != 0) {
+				return comp;
+			}
 		}
 
-		// #3 compare s and c
-		comp = s.compareTo(o.s);
-		if (comp != 0) { // s != o.s
+		// compare last term; d is already compared
+		int comp = s.compareTo(o.s);
+		if (comp != 0) { // C != o.C
 			return comp;
 		} else {
 			comp = c.compareTo(o.c);
@@ -63,19 +50,67 @@ public class Positions implements Comparable<Positions> {
 			}
 		}
 
-		// #4 compare size
-		if (myBitLength > otBitLength) {
+		if (size() > o.size()) {
 			return 1;
-		} else if (myBitLength < otBitLength) {
+		} else if (size() < o.size()) {
 			return -1;
 		}
 
 		return 0;
 	}
 
+	/**
+	 * Construction of identifier described by Weiss in the Logoot algorithm
+	 * Compression feature iz added
+	 * 
+	 * @param r
+	 * @param p
+	 * @param q
+	 * @param rep
+	 */
+	public void constructIdentifier(ArrayList<BigInteger> r, Positions p,
+			Positions q, Replica rep) {
+
+		addAll(r);
+
+		s = rep.getId();
+		c = rep.getClock();
+
+	}
+
+	/**
+	 * Function which drop the replicas informations and build the list of
+	 * index-digits
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public ArrayList<BigInteger> prefix(Integer index) {
+		ArrayList<BigInteger> prefixes = new ArrayList<BigInteger>();
+		for (int i = 0; i < index; ++i) {
+			if (i < size()) {
+				prefixes.add(get(i));
+			} else {
+				prefixes.add(BigInteger.ZERO);
+			}
+		}
+		return prefixes;
+	}
+
+	public int bitSizeWithSR() {
+		int sum = 0;
+		for (BigInteger pos : this) {
+			sum += pos.bitLength() + 2; // 2 bit to indicate which type
+			// it iz
+			// sum += pos.getD().bitLength() + 12 * 8;
+		}
+		return sum;
+	}
+	
+
 	@Override
 	public String toString() {
-		return "<d" + d.toString() + "; s " + s + "; c " + c.toString() + ">";
+		return "<d" + this.toString() + "; s "+ s+ "; c " + c.toString() + ">";
 	}
 
 }

@@ -14,8 +14,6 @@ import com.google.inject.Inject;
 
 public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 
-	private Random rand = new Random();
-
 	@Inject
 	private IBase base;
 
@@ -28,43 +26,53 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 		this.boundary = boundary;
 	}
 
-	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Replica rep, BigInteger interval, int index) {
+	public Iterator<Positions> generateLineIdentifiers(Positions p,
+			Positions q, Integer N, Replica rep) {
+
 		ArrayList<Positions> positions = new ArrayList<Positions>();
 
-		// #0 process the interval for random
-		BigInteger step = interval.divide(BigInteger.valueOf(N));
-		step = (step.min(boundary.getBoundary(index))).max(BigInteger
-				.valueOf(1));
+		ArrayList<BigInteger> qprefix = q.prefix(q.size());
+		ArrayList<BigInteger> pprefix = p.prefix(p.size());
 
-		// #1 Truncate tail or add bits
-		int prevBitCount = p.getD().bitLength() - 1;
-		int diffBitCount = prevBitCount - base.getSumBit(index);
+		Integer index = 0;
+		BigInteger interval = new BigInteger("0");
+		BigInteger nBigInteger = new BigInteger(N.toString());
+		while (interval.compareTo(nBigInteger) == -1) {
+			++index;
 
-		BigInteger r = p.getD().shiftRight(diffBitCount);
+			interval = base.count(qprefix, index)
+					.subtract(base.count(pprefix, index))
+					.subtract(new BigInteger("1"));
+		}
 
-		// #2 create position by adding a random value; N times
+		BigInteger step = interval.divide(nBigInteger);
+		step = step.min(boundary.getBoundary(index));
+		step = step.max(new BigInteger("1"));
+
+		ArrayList<BigInteger> r = p.prefix(index);
+		Random rand = new Random();
 		for (int j = 0; j < N; ++j) {
+			Positions tempPositions = new Positions();
 			BigInteger randomInt;
 
-			// Random
-			if (!(step.compareTo(BigInteger.valueOf(1)) == 1)) { // step <= 1
-				randomInt = BigInteger.valueOf(1);
+			if (!(step.compareTo(new BigInteger("1")) == 1)) { // step <= 1
+				randomInt = new BigInteger("1");
 			} else {
 				do {
 					randomInt = new BigInteger(step.subtract(
-							BigInteger.valueOf(1)).bitLength(), rand);
-				} while (randomInt.compareTo(step.subtract(BigInteger
-						.valueOf(1))) >= 0);
-				randomInt = randomInt.add(BigInteger.valueOf(1));
+							new BigInteger("1")).bitLength(), rand);
+
+				} while (randomInt
+						.compareTo(step.subtract(new BigInteger("1"))) >= 0);
+				randomInt = randomInt.add(new BigInteger("1"));
 			}
-			// // Construct
-			BigInteger newR = base.add(r, randomInt);
-			rep.setClock(rep.getClock() + 1);
-			Positions tempPositions = new Positions(newR,
-					base.getSumBit(index), rep);
+
+			base.add(r, randomInt);
+
+			tempPositions.constructIdentifier(r, p, q, rep);
 			positions.add(tempPositions);
-			r = base.add(r, step);
+
+			base.add(r, step.subtract(randomInt));
 		}
 
 		return positions.iterator();

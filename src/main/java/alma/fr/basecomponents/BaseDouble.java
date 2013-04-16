@@ -1,70 +1,102 @@
 package alma.fr.basecomponents;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 
 import com.google.inject.Inject;
 
 public class BaseDouble implements IBase {
 
-	private final Integer baseBase;
+	private BigInteger baseBase;
+
+	private final static BigInteger two = BigInteger.valueOf(2);
+
+	private static ArrayList<BigInteger> bases;
 
 	@Inject
-	public BaseDouble(@Basebase Integer baseBase) {
+	public BaseDouble(@Basebase BigInteger baseBase) {
 		this.baseBase = baseBase;
+		BaseDouble.bases = new ArrayList<BigInteger>();
 	}
 
-	public Integer getBitBase(Integer depth) {
-		return baseBase + depth - 1;
+	public BigInteger getBase(Integer depth) {
+		while (bases.size() < depth) {
+			bases.add(BigInteger.ZERO);
+		}
+		if (bases.get(depth - 1).equals(BigInteger.ZERO)) {
+			bases.set(depth - 1, baseBase.multiply(two.pow(depth)));
+		}
+		return bases.get(depth - 1);
 	}
 
-	public Integer getSumBit(Integer depth) {
-		int n = getBitBase(depth);
-		int m = baseBase - 1;
-		return (n * (n + 1)) / 2 - (m * (m + 1) / 2);
-	}
-
-	public Integer getBaseBase() {
+	public BigInteger getBaseBase() {
 		return baseBase;
 	}
 
-	public BigInteger sub(BigInteger r, BigInteger value) {
-		return r.subtract(value);
+	public void setBaseBase(BigInteger baseBase) {
+		this.baseBase = baseBase;
 	}
 
-	public BigInteger add(BigInteger r, BigInteger value) {
-		return r.add(value);
+	public BigInteger count(ArrayList<BigInteger> r, Integer index) {
+		BigInteger sum = BigInteger.ZERO;
+
+		BigInteger value;
+		for (int i = 0; i < index - 1; ++i) {
+
+			if (i < r.size()) {
+				value = r.get(i);
+			} else {
+				value = BigInteger.ZERO;
+			}
+
+			sum = sum.add(value).multiply(getBase(i + 2));
+		}
+		if (index - 1 < r.size()) {
+			value = r.get(index - 1);
+		} else {
+			value = BigInteger.ZERO;
+		}
+
+		sum = sum.add(value);
+
+		return sum;
 	}
 
-	public BigInteger interval(BigInteger p, BigInteger q, Integer index) {
-		int prevBitLength = p.bitLength() - 1;
-		int nextBitLength = q.bitLength() - 1;
+	public void sub(ArrayList<BigInteger> r, BigInteger value) {
+		Integer i = r.size() - 1;
 
-		int bitBaseSum = getSumBit(index);
-		BigInteger result = BigInteger.ZERO;
-
-		// #1 truncate or add
-		// #1a: on previous digit
-		BigInteger prev;
-		if (prevBitLength < bitBaseSum) { // Add 0 and +1 to result
-			prev = p.shiftLeft(bitBaseSum - prevBitLength);
-			//result = BigInteger.ONE;
-		} else {
-			prev = p.shiftRight(prevBitLength - bitBaseSum);
+		BigInteger reste = value.divide(getBase(i + 1));
+		BigInteger tempVal = r.get(i).subtract(
+				(value.divideAndRemainder(getBase(i + 1))[1]));
+		if (tempVal.compareTo(new BigInteger("0")) == -1) { // tempVal<0
+			tempVal = getBase(i + 1).add(tempVal);
+			reste = reste.add(new BigInteger("1")); // ++
 		}
-
-		// #1b: on next digit
-		BigInteger next;
-		if (nextBitLength < bitBaseSum) { // Add 1 and +1 to result
-			next = q.shiftLeft(bitBaseSum - nextBitLength);
-			//next = next.add(BigInteger.valueOf(2)
-			//		.pow(bitBaseSum - nextBitLength).subtract(BigInteger.ONE));
-			//result = result.add(BigInteger.ONE);
-		} else {
-			next = q.shiftRight(nextBitLength - bitBaseSum);
+		r.set(i, tempVal);
+		while (i > 0 && !(reste.compareTo(new BigInteger("1")) == -1)) {
+			--i;
+			tempVal = r.get(i).subtract(
+					(reste.divideAndRemainder(getBase(i + 1))[1]));
+			reste = reste.divide(getBase(i + 1));
+			if (tempVal.compareTo(new BigInteger("0")) == -1) { // tempval<0
+				tempVal = getBase(i + 1).add(tempVal);
+				reste = reste.add(new BigInteger("1")); // ++
+			}
+			r.set(i, tempVal);
 		}
+	}
 
-		result = result.add(next.subtract(prev).subtract(BigInteger.ONE));
-
-		return result;
+	public void add(ArrayList<BigInteger> r, BigInteger value) {
+		Integer i = r.size() - 1;
+		BigInteger reste = (r.get(i).add(value)).divide(getBase(i + 1));
+		r.set(i, (r.get(i).add(value)).divideAndRemainder(getBase(i + 1))[1]);
+		while (i > 0 && !(reste.compareTo(new BigInteger("1")) == -1)) { // reste
+			// >= 1
+			--i;
+			BigInteger tempValue = r.get(i);
+			r.set(i,
+					(r.get(i).add(reste)).divideAndRemainder(getBase(i + 1))[1]);
+			reste = (tempValue.add(reste)).divide(getBase(i + 1));
+		}
 	}
 }

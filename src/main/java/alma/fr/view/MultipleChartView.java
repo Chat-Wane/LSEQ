@@ -1,10 +1,10 @@
 package alma.fr.view;
 
-
-
 import java.awt.Color;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.jfree.chart.ChartFrame;
@@ -31,7 +31,7 @@ public class MultipleChartView extends ChartView {
 	private ArrayList<String> legend = new ArrayList<String>();
 
 	private String note = new String();
-	
+
 	public void setLegend(ArrayList<String> legend) {
 		this.legend = legend;
 	}
@@ -39,7 +39,7 @@ public class MultipleChartView extends ChartView {
 	public ArrayList<String> getLegend() {
 		return legend;
 	}
-	
+
 	public String getNote() {
 		return note;
 	}
@@ -55,7 +55,7 @@ public class MultipleChartView extends ChartView {
 	public void setNote(String note) {
 		this.note = note;
 	}
-	
+
 	@Override
 	public void run() {
 
@@ -119,13 +119,12 @@ public class MultipleChartView extends ChartView {
 		getChart().getLegend().setPosition(RectangleEdge.TOP);
 		getChart().getLegend().getItemContainer().getBlocks();
 
-		if (!note.isEmpty()){
-		TextTitle legendText = new TextTitle("Notes : \n"+note);
-		legendText.setPosition(RectangleEdge.BOTTOM);
-		getChart().addSubtitle(legendText);
+		if (!note.isEmpty()) {
+			TextTitle legendText = new TextTitle("Notes : \n" + note);
+			legendText.setPosition(RectangleEdge.BOTTOM);
+			getChart().addSubtitle(legendText);
 		}
 
-		
 		setFrame(new ChartFrame(getPageName(), getChart()));
 	}
 
@@ -140,4 +139,27 @@ public class MultipleChartView extends ChartView {
 			e.printStackTrace();
 		}
 	}
+
+	// / / // // / / // / // / / / /// / // / // // / //
+	public void writeFile() {
+		String page = getPageName().replace("/", "_").replace("\\", "_");
+		try {
+			PrintWriter out = new PrintWriter(new FileWriter(page + ".dat"));
+			int docSize = getDatas().size();
+			for (int i = 0; i < docSize; ++i) {
+				String lineS = new String();
+				lineS = i + " " + getDatas().get(i);
+				for (ArrayList<Integer> lengthSerie : lengths) {
+					lineS = lineS + " " + lengthSerie.get(i);
+				}
+				out.println(lineS);
+			}
+			out.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
 }

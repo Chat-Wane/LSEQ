@@ -35,19 +35,14 @@ public class LogootEngine implements ILogootEngine {
 		this.base = base;
 		this.strategyChoice = strategyChoice;
 
-		Replica fakeReplica = new Replica();
-		fakeReplica.setClock(-666);
-		fakeReplica.setId(-666);
-
-		Positions first = new Positions(BigInteger.ZERO, base.getBaseBase(),
-				fakeReplica);
-
-		fakeReplica.setClock(666);
-		fakeReplica.setId(666);
-
-		Positions last = new Positions(BigInteger.valueOf(2)
-				.pow(this.base.getBaseBase()).subtract(BigInteger.ONE),
-				base.getBaseBase(), fakeReplica);
+		Positions first = new Positions();
+		first.add(BigInteger.ZERO);
+		first.setC(BigInteger.valueOf(-666));
+		first.setS(BigInteger.valueOf(-666));
+		Positions last = new Positions();
+		last.add(this.base.getBase(1));
+		last.setC(BigInteger.valueOf(-666));
+		last.setS(BigInteger.valueOf(-666));
 
 		idTable = new ArrayList<Positions>();
 		idTable.add(first);
@@ -63,9 +58,6 @@ public class LogootEngine implements ILogootEngine {
 		for (MyDelta delta : patch) {
 			Integer position;
 
-			// System.out.println(idTable);
-			// System.out.println("==========");
-			// System.out.println(delta.getId());
 			switch (delta.getType()) {
 			case INSERT:
 				one_insert = true;
@@ -203,12 +195,13 @@ public class LogootEngine implements ILogootEngine {
 	 * Factorize code for an insert operation
 	 */
 	private Iterator<Positions> insert(Delta delta) {
-
-		Positions previous = idTable.get(delta.getOriginal().getPosition());
-		Positions next = idTable.get(delta.getOriginal().getPosition()
+		Positions previous;
+		Positions next;
+		previous = idTable.get(delta.getOriginal().getPosition());
+		next = idTable.get(delta.getOriginal().getPosition()
 				+ delta.getOriginal().getLines().size() + 1);
 
-		return strategyChoice.generateIdentifiers(previous, next, delta
+		return strategyChoice.generateLineIdentifiers(previous, next, delta
 				.getRevised().getLines().size(), replica);
 	}
 }

@@ -18,17 +18,17 @@ import com.google.inject.Module;
 
 /**
  * Weiss but starting at 2^5 and doubling space to each depth
- * 
+ *
  */
 public class DoubleModule implements Module {
 
 	public void configure(Binder binder) {
-		Integer baseBase = new Integer(5);
+		BigInteger baseBase = new BigInteger("2").pow(5);
 		BigInteger boundary = new BigInteger("10");
 
 		/* BASE */
-		binder.bind(Integer.class).annotatedWith(Basebase.class)
-				.toInstance(baseBase);
+		binder.bind(BigInteger.class).annotatedWith(Basebase.class).toInstance(
+				baseBase);
 		binder.bind(IBase.class).to(BaseDouble.class);
 
 		/* STRATEGY */
@@ -40,7 +40,7 @@ public class DoubleModule implements Module {
 		binder.bind(IIdProviderStrategy.class).to(
 				BeginningBoundaryIdProvider.class);
 		binder.bind(IStrategyChoice.class).to(SingleStrategyChoice.class);
-
+		
 	}
 
 }

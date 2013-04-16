@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/weeklyreports/!svn/ver/60/trunk/LogootComponents/src/main/java/alma/fr/strategiescomponents
+END
+IIdProviderStrategy.java
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/svn/weeklyreports/!svn/ver/55/trunk/LogootComponents/src/main/java/alma/fr/strategiescomponents/IIdProviderStrategy.java
+END
+BeginningBoundaryIdProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 129
+/svn/weeklyreports/!svn/ver/60/trunk/LogootComponents/src/main/java/alma/fr/strategiescomponents/BeginningBoundaryIdProvider.java
+END
+EndingBoundaryIdProvider.java
+K 25
+svn:wc:ra_dav:version-url
+V 126
+/svn/weeklyreports/!svn/ver/59/trunk/LogootComponents/src/main/java/alma/fr/strategiescomponents/EndingBoundaryIdProvider.java
+END
