@@ -2,8 +2,8 @@ LSEQ: CRDT for sequences
 ========================
 
 This framework allows the developper to configure underlying components of
-its allocation strategy and measure the size of identifiers generated
-(see [package module](/src/main/java/alma/fr/modules/). Available components are
+its allocation strategy and to measure the size of identifiers generated
+(see [package module](/src/main/java/alma/fr/modules/ ). Available components are
 divided in 4 categories:
 *    Base: Double or Constant (parameter _departure base_)
 *    Boundary: Double or Constant (parameter _departure boundary_)
@@ -14,7 +14,7 @@ Of course, the framework also allows to develop custom components.
 
 Run
 ---
-Two examples of launching are given:
+The frameworks gives two examples of launching:
 *    On synthetic sequences (Front, Queue or Random)
 *    On Wikipedia pages 
 
