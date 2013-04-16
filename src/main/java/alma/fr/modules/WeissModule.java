@@ -23,8 +23,8 @@ import com.google.inject.Module;
 public class WeissModule implements Module {
 
 	public void configure(Binder binder) {
-		Integer baseBase = new Integer(10);
-		BigInteger boundary = new BigInteger("10");
+		Integer baseBase = new Integer(64);
+		BigInteger boundary = new BigInteger("1000000");
 
 		/* BASE */
 		binder.bind(Integer.class).annotatedWith(Basebase.class)
