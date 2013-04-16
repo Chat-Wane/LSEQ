@@ -1,9 +1,0 @@
-package alma.fr.ponderator;
-
-public class ExpPonderator implements IPonderator {
-
-	@Override
-	public Double getPonderation(Double value) {
-		return Math.exp(value);
-	}
-}
