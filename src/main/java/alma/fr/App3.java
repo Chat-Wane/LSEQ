@@ -4,16 +4,6 @@ import java.util.ArrayList;
 
 public class App3 {
 	public static void main(String[] args) {
-
-		// ID STRATEGIEZ
-		try{
-			  //do what you want to do before sleeping
-			  Thread.currentThread().sleep(4000);//sleep for 1000 ms
-			  //do what you want to do after sleeptig
-			}
-			catch(InterruptedException ie){
-			//If this thread was intrrupted by nother thread 
-			}
 		
 		boolean pngExport = false;
 		boolean histoPrompt = true;

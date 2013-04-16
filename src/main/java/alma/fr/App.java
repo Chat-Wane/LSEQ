@@ -8,7 +8,7 @@ import alma.fr.data.Positions;
 import alma.fr.documentgenerator.DocumentSimulator;
 import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.logootenginecomponents.Replica;
-import alma.fr.modules.DoubleModule;
+import alma.fr.modules.GreedModule;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -19,14 +19,6 @@ import com.google.inject.Injector;
  */
 public class App {
 	public static void main(String[] args) {
-		// ID STRATEGIEZ
-		try {
-			// do what you want to do before sleeping
-			Thread.currentThread().sleep(4000);// sleep for 1000 ms
-			// do what you want to do after sleeptig
-		} catch (InterruptedException ie) {
-			// If this thread was intrrupted by nother thread
-		}
 
 		Float[] result;
 		Injector injector;
@@ -36,8 +28,8 @@ public class App {
 		/*********************************/
 
 		// injector = Guice.createInjector(new WeissModule());
-		// injector = Guice.createInjector(new GreedModule());
-		injector = Guice.createInjector(new DoubleModule());
+		 injector = Guice.createInjector(new GreedModule());
+		// injector = Guice.createInjector(new DoubleModule());
 		// injector = Guice.createInjector(new GreedDoubleModule());
 		// injector = Guice.createInjector(new GreedRandDoubleModule());
 		// injector = Guice.createInjector(new EditingModule());

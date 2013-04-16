@@ -24,7 +24,7 @@ import com.google.inject.Module;
 public class EditingModule implements Module {
 
 	public void configure(Binder binder) {
-		BigInteger baseBase = new BigInteger("2").pow(4);
+		BigInteger baseBase = new BigInteger("2").pow(5);
 		BigInteger boundary = new BigInteger("10");
 
 		/* BASE */

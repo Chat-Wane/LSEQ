@@ -27,8 +27,8 @@ import com.google.inject.Module;
 public class GreedModule implements Module {
 
 	public void configure(Binder binder) {
-		BigInteger baseBase = new BigInteger("2").pow(64);
-		BigInteger boundary = new BigInteger("1000000");
+		BigInteger baseBase = new BigInteger("2").pow(10);
+		BigInteger boundary = new BigInteger("10");
 
 		/* BASE */
 		binder.bind(BigInteger.class).annotatedWith(Basebase.class).toInstance(
