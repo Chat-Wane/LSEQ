@@ -15,7 +15,7 @@ import alma.fr.documentgenerator.DocumentSimulator;
 import alma.fr.documentgenerator.EndingGenerator;
 import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.logootenginecomponents.Replica;
-import alma.fr.modules.GreedDoubleModule;
+import alma.fr.modules.GreedRandDoubleModule;
 import alma.fr.strategychoicecomponents.FakeListNode;
 
 import com.google.inject.Guice;
@@ -27,15 +27,15 @@ import com.google.inject.Injector;
  */
 public class App {
 	public static void main(String[] args) {
-		// // ID STRATEGIEZ
-		// try {
-		// Thread.currentThread();
-		// // do what you want to do before sleeping
-		// Thread.sleep(10000);// sleep for 1000 ms
-		// // do what you want to do after sleeptig
-		// } catch (InterruptedException ie) {
-		// // If this thread was intrrupted by nother thread
-		// }
+//		// ID STRATEGIEZ
+//		try {
+//			Thread.currentThread();
+//			// do what you want to do before sleeping
+//			Thread.sleep(10000);// sleep for 1000 ms
+//			// do what you want to do after sleeptig
+//		} catch (InterruptedException ie) {
+//			// If this thread was intrrupted by nother thread
+//		}
 
 		Injector injector;
 		LogootEngine logootEngine;
@@ -46,8 +46,8 @@ public class App {
 		// injector = Guice.createInjector(new WeissModule());
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
-		injector = Guice.createInjector(new GreedDoubleModule());
-		// injector = Guice.createInjector(new GreedRandDoubleModule());
+		//injector = Guice.createInjector(new GreedDoubleModule());
+		 injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
 		logootEngine.setReplica(new Replica());
@@ -60,7 +60,7 @@ public class App {
 			ds.setNbPatch(10000);
 			ds.run(logootEngine);
 			System.out.println(DocumentSimulator.getNbLine());
-
+ 
 			if (DocumentSimulator.getNbLine() == 10000) {
 				ArrayList<Positions> idTable = (ArrayList<Positions>) logootEngine
 						.getIdTable();

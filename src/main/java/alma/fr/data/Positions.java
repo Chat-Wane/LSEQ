@@ -11,7 +11,9 @@ public class Positions implements Comparable<Positions> {
 	private final Integer c;
 
 	public Positions(BigInteger r, int bitSize, Replica rep) {
-		d = r.setBit(bitSize); // set the departure bit to 1
+		d = r.setBit(bitSize); // set the departure bit to 1. Thus the 0 in
+								// front won't be automatically truncated by
+								// BigInteger
 		s = rep.getId();
 		c = rep.getClock();
 	}
@@ -73,8 +75,7 @@ public class Positions implements Comparable<Positions> {
 
 	@Override
 	public String toString() {
-		return "<d" + d.toString() + "; s " + s + "; c " + c.toString()
-				+ ">";
+		return "<d" + d.toString() + "; s " + s + "; c " + c.toString() + ">";
 	}
 
 }
