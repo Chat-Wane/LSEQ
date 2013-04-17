@@ -13,6 +13,7 @@ import alma.fr.data.Positions;
 import alma.fr.documentgenerator.BeginningGenerator;
 import alma.fr.documentgenerator.DocumentSimulator;
 import alma.fr.documentgenerator.EndingGenerator;
+import alma.fr.documentgenerator.VGenerator;
 import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.logootenginecomponents.Replica;
 import alma.fr.modules.GreedRandDoubleModule;
@@ -38,21 +39,28 @@ public class App {
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
 		// injector = Guice.createInjector(new GreedDoubleModule());
-		 injector = Guice.createInjector(new GreedRandDoubleModule());
+		injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
 		logootEngine.setReplica(new Replica());
 
 		BeginningGenerator bg = new BeginningGenerator();
 		EndingGenerator eg = new EndingGenerator();
-		ds = new DocumentSimulator(bg);
+		VGenerator vg = new VGenerator();
+		ds = new DocumentSimulator(vg);
 
 		while (true) {
 			ds.setNbPatch(10000);
 			ds.run(logootEngine);
-			System.out.println(DocumentSimulator.getNbLine());
- 
-			if (DocumentSimulator.getNbLine() == 10000) {
+			System.out.println("=====" + DocumentSimulator.getNbLine()
+					+ "=====");
+
+			Float[] results = avgAndMaxBitSize((ArrayList<Positions>) logootEngine
+							.getIdTable());
+			System.out.println("avg bitSize = "+ results[0]);
+			System.out.println("max bitSize = "+ results[1]);
+
+			if (DocumentSimulator.getNbLine() == 100000) {
 				ArrayList<Positions> idTable = (ArrayList<Positions>) logootEngine
 						.getIdTable();
 				HashMap<Positions, FakeListNode> spectrum = logootEngine
@@ -64,8 +72,7 @@ public class App {
 	}
 
 	// / / / / ///// / / // / // / / // / / // / // / / /
-	public static Float[] avgAndMaxBitSize(List<Positions> logootIdTable,
-			IBase base) {
+	public static Float[] avgAndMaxBitSize(List<Positions> logootIdTable) {
 		BigInteger[] tempResult = { BigInteger.ZERO, BigInteger.ZERO };
 		Float[] result = { 0f, 0f };
 		for (Positions p : logootIdTable) {

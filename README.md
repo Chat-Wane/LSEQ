@@ -7,7 +7,7 @@ its allocation strategy and to measure the size of identifiers generated
 divided in 4 categories:
 *    Base: Double or Constant (parameter _departure base_)
 *    Boundary: Double or Constant (parameter _departure boundary_)
-*    Allocation strategies: Beginning (_boundary\+_) or Ending (_boundary\-_) (parameters _base_, _boundary_)
+*    Allocation strategies: Beginning (<i>boundary+</i>) or Ending (<i>boundary-</i>) (parameters _base_, _boundary_)
 *    Strategy Choice: Single, Round-Robin or Random (parameter(s) _allocation strategie(s)_)
 
 Of course, the framework also allows to develop custom components.
@@ -15,7 +15,7 @@ Of course, the framework also allows to develop custom components.
 Run
 ---
 The frameworks gives two examples of launching:
-*    On synthetic sequences (Front, Queue or Random)
+*    On synthetic sequences (Front, Queue, Both or Random)
 *    On Wikipedia pages 
 
 Once again, custom synthetic sequences can be added, and other kinds of real

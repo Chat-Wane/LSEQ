@@ -9,13 +9,17 @@ public class DocumentSimulator {
 
 	private int nbPatch = 100;
 
-	IDeltasGenerator deltaGenerator = new BeginningGenerator();
+	IDeltasGenerator deltaGenerator = new BeginningGenerator(); // default
 
 	public DocumentSimulator(IDeltasGenerator generator) {
 		nbLine = 0;
 		deltaGenerator = generator;
 	}
 
+	public void setDeltaGenerator(IDeltasGenerator deltaGenerator) {
+		this.deltaGenerator = deltaGenerator;
+	}
+	
 	public void run(LogootEngine logootEngine) {
 
 		for (int i = 0; i < nbPatch; ++i) {
