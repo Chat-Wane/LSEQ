@@ -22,5 +22,5 @@ public interface IIdProviderStrategy {
 	 * @return list of unique identifiers which can be used in logoot
 	 */
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Replica rep, BigInteger interval, int index);
+			Integer N, Integer rep, BigInteger interval, int index);
 }

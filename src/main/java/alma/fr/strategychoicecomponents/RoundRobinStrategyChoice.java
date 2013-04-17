@@ -33,7 +33,7 @@ public class RoundRobinStrategyChoice implements IStrategyChoice {
 	}
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Replica rep) {
+			Integer N, Integer rep) {
 
 		// #1 count interval between p and q, until itz enough
 		BigInteger interval = BigInteger.ZERO;

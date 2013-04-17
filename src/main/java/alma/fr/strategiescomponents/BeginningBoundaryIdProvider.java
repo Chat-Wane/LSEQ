@@ -7,7 +7,6 @@ import java.util.Random;
 
 import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
-import alma.fr.logootenginecomponents.Replica;
 import alma.fr.strategiescomponents.boundary.IBoundary;
 
 import com.google.inject.Inject;
@@ -29,7 +28,7 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 	}
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Replica rep, BigInteger interval, int index) {
+			Integer N, Integer rep, BigInteger interval, int index) {
 		ArrayList<Positions> positions = new ArrayList<Positions>();
 
 		// #0 process the interval for random
@@ -60,9 +59,8 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 			}
 			// // Construct
 			BigInteger newR = base.add(r, randomInt);
-			rep.setClock(rep.getClock() + 1);
 			Positions tempPositions = new Positions(newR,
-					base.getSumBit(index), rep);
+					base.getSumBit(index),index, rep, base);
 			positions.add(tempPositions);
 			r = base.add(r, step);
 		}

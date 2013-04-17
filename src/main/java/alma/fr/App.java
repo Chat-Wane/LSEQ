@@ -42,7 +42,7 @@ public class App {
 		injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
-		logootEngine.setReplica(new Replica());
+		logootEngine.setReplica(42); // whatever
 
 		BeginningGenerator bg = new BeginningGenerator();
 		EndingGenerator eg = new EndingGenerator();

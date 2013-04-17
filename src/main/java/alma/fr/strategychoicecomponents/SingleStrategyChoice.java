@@ -28,7 +28,7 @@ public class SingleStrategyChoice implements IStrategyChoice {
 	}
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Replica rep) {
+			Integer N, Integer rep) {
 		// #1: process the index and interval values
 		BigInteger interval = BigInteger.ZERO;
 		int index = 0;

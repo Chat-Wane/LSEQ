@@ -32,7 +32,7 @@ public class GreedRandDoubleModule implements Module {
 		binder.bind(Integer.class).annotatedWith(Basebase.class).toInstance(
 				baseBase);
 		binder.bind(IBase.class).to(BaseDouble.class);
-
+		
 		/* STRATEGY */
 		binder.bind(IBoundary.class).to(ConstantBoundary.class);
 		binder.bind(BigInteger.class).annotatedWith(BoundaryValue.class)

@@ -23,7 +23,7 @@ public interface IStrategyChoice {
 	 * @return list of unique identifiers which can be used in logoot
 	 */
 	public Iterator<Positions> generateIdentifiers(Positions p,
-			Positions q, Integer N, Replica rep);
+			Positions q, Integer N, Integer rep);
 
 	/**
 	 * Add data to the strategy choice
