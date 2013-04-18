@@ -1,15 +1,11 @@
 package alma.fr.data;
 
 import java.math.BigInteger;
+import java.util.Arrays;
 
-import alma.fr.basecomponents.IBase;
-
-import com.google.inject.Inject;
+import alma.fr.logootenginecomponents.LogootEngine;
 
 public class Positions implements Comparable<Positions> {
-
-	@Inject
-	private static IBase base;
 
 	private final BigInteger d; // position
 	private final Integer s; // source
@@ -18,14 +14,13 @@ public class Positions implements Comparable<Positions> {
 	private final Integer b; // biase
 	private final boolean[] dim; // change dim or not
 
-	public Positions(BigInteger r, int bitSize, int size, int s, IBase base) {
+	public Positions(BigInteger r, int bitSize, int size, int s) {
 		this.d = r.setBit(bitSize); // set the departure bit to 1. Thus the 0 in
 		// front won't be automatically truncated by
 		// BigInteger
 		this.s = s;
 		this.b = 0;
 		this.dim = new boolean[size];
-		Positions.base = base;
 	}
 
 	public BigInteger getD() {
@@ -61,8 +56,11 @@ public class Positions implements Comparable<Positions> {
 		}
 
 		// #2 truncate or extend until getSumBit(i)
-		int nbBitToCompare = base.getSumBit(i + 1) + 1; // +1: for first bit of
-														// idz
+		int nbBitToCompare = LogootEngine.base.getSumBit(i + 1) + 1; // +1: for
+																		// first
+																		// bit
+																		// of
+		// idz
 
 		// #2a truncate
 		int myBitLength = d.bitLength();
@@ -97,9 +95,25 @@ public class Positions implements Comparable<Positions> {
 
 	}
 
+	public String reNumberInDec() {
+		String result = "<< ";
+		int maxNbBit = d.bitLength();
+		for (int i = 0; i < dim.length; ++i) {
+			int nbBits = LogootEngine.base.getSumBit(i + 1) + 1; // 1 = first
+																	// bit of d
+			BigInteger tempDigit = d.shiftRight(maxNbBit - nbBits);
+			BigInteger maskedDigit = tempDigit.and(BigInteger.valueOf(2)
+					.pow(LogootEngine.base.getBitBase(i + 1))
+					.subtract(BigInteger.ONE));
+			result = result + maskedDigit.toString() + " ";
+		}
+		result = result + ">>";
+		return result;
+	}
+
 	@Override
 	public String toString() {
-		return "<d" + d.toString() + "; s " + s + "; b " + b.toString()
-				+ "; dim " + dim.toString() + ">";
+		return "<d" + reNumberInDec() + "; s " + s + "; b " + b.toString()
+				+ "; dim" + dim.length + " " + Arrays.toString(dim) + ">";
 	}
 }

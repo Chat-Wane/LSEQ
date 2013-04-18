@@ -8,14 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
 import alma.fr.documentgenerator.BeginningGenerator;
 import alma.fr.documentgenerator.DocumentSimulator;
 import alma.fr.documentgenerator.EndingGenerator;
 import alma.fr.documentgenerator.VGenerator;
 import alma.fr.logootenginecomponents.LogootEngine;
-import alma.fr.logootenginecomponents.Replica;
 import alma.fr.modules.GreedRandDoubleModule;
 import alma.fr.strategychoicecomponents.FakeListNode;
 
@@ -61,6 +59,10 @@ public class App {
 			System.out.println("max bitSize = "+ results[1]);
 
 			if (DocumentSimulator.getNbLine() == 100000) {
+//				for (int i=0;i<100000;++i){// print some idz
+//					System.out.println(logootEngine
+//					.getIdTable().get(i));
+//				}
 				ArrayList<Positions> idTable = (ArrayList<Positions>) logootEngine
 						.getIdTable();
 				HashMap<Positions, FakeListNode> spectrum = logootEngine

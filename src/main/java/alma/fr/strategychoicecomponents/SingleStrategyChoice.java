@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
-import alma.fr.logootenginecomponents.Replica;
 import alma.fr.strategiescomponents.IIdProviderStrategy;
 
 import com.google.inject.Inject;

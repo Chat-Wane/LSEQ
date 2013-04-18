@@ -6,9 +6,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Random;
 
-import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
-import alma.fr.logootenginecomponents.Replica;
+import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.strategiescomponents.boundary.IBoundary;
 
 import com.google.inject.Inject;
@@ -18,14 +17,10 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 	private Random rand = new Random();
 
 	@Inject
-	private IBase base;
-
-	@Inject
 	private IBoundary boundary;
 
 	@Inject
-	public EndingBoundaryIdProvider(IBase base, IBoundary boundary) {
-		this.base = base;
+	public EndingBoundaryIdProvider(IBoundary boundary) {
 		this.boundary = boundary;
 	}
 
@@ -41,7 +36,7 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 
 		// #1 Truncate tail or add bits
 		int nextBitCount = q.getD().bitLength() - 1;
-		int diffBitCount = nextBitCount - base.getSumBit(index);
+		int diffBitCount = nextBitCount - LogootEngine.base.getSumBit(index);
 
 		BigInteger r = q.getD().shiftRight(diffBitCount);
 
@@ -61,11 +56,11 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 				randomInt = randomInt.add(BigInteger.valueOf(1));
 			}
 			// // Construct
-			BigInteger newR = base.sub(r, randomInt);
+			BigInteger newR = LogootEngine.base.sub(r, randomInt);
 			Positions tempPositions = new Positions(newR,
-					base.getSumBit(index), index, rep, base);
+					LogootEngine.base.getSumBit(index), index, rep);
 			positions.add(tempPositions);
-			r = base.sub(r, step);
+			r = LogootEngine.base.sub(r, step);
 		}
 
 		Collections.reverse(positions);

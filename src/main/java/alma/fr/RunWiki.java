@@ -9,9 +9,7 @@ import java.util.List;
 import alma.fr.data.Positions;
 import alma.fr.documentgenerator.WikipediaDocument;
 import alma.fr.logootenginecomponents.LogootEngine;
-import alma.fr.logootenginecomponents.Replica;
 import alma.fr.modules.GreedRandDoubleModule;
-import alma.fr.modules.WeissModule;
 import alma.fr.strategychoicecomponents.IStrategyChoice;
 import alma.fr.view.MultipleChartView;
 
