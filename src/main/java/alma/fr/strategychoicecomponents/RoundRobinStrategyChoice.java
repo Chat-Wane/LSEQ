@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
+import alma.fr.logootenginecomponents.Replica;
 import alma.fr.strategiescomponents.IIdProviderStrategy;
 
 import com.google.inject.Inject;
@@ -32,7 +33,7 @@ public class RoundRobinStrategyChoice implements IStrategyChoice {
 	}
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Integer rep) {
+			Integer N, Replica rep) {
 
 		// #1 count interval between p and q, until itz enough
 		BigInteger interval = BigInteger.ZERO;

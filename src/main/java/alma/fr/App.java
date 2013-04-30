@@ -14,7 +14,8 @@ import alma.fr.documentgenerator.DocumentSimulator;
 import alma.fr.documentgenerator.EndingGenerator;
 import alma.fr.documentgenerator.VGenerator;
 import alma.fr.logootenginecomponents.LogootEngine;
-import alma.fr.modules.GreedRandDoubleModule;
+import alma.fr.logootenginecomponents.Replica;
+import alma.fr.modules.WeissModule;
 import alma.fr.strategychoicecomponents.FakeListNode;
 
 import com.google.inject.Guice;
@@ -33,19 +34,19 @@ public class App {
 
 		/*********************************/
 
-		// injector = Guice.createInjector(new WeissModule());
+		injector = Guice.createInjector(new WeissModule());
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
 		// injector = Guice.createInjector(new GreedDoubleModule());
-		injector = Guice.createInjector(new GreedRandDoubleModule());
+		// injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
-		logootEngine.setReplica(42); // whatever
+		logootEngine.setReplica(new Replica()); // whatever
 
 		BeginningGenerator bg = new BeginningGenerator();
 		EndingGenerator eg = new EndingGenerator();
 		VGenerator vg = new VGenerator();
-		ds = new DocumentSimulator(vg);
+		ds = new DocumentSimulator(eg);
 
 		while (true) {
 			ds.setNbPatch(10000);
@@ -54,15 +55,14 @@ public class App {
 					+ "=====");
 
 			Float[] results = avgAndMaxBitSize((ArrayList<Positions>) logootEngine
-							.getIdTable());
-			System.out.println("avg bitSize = "+ results[0]);
-			System.out.println("max bitSize = "+ results[1]);
+					.getIdTable());
+			System.out.println("avg bitSize = " + results[0]);
+			System.out.println("max bitSize = " + results[1]);
 
 			if (DocumentSimulator.getNbLine() == 100000) {
-//				for (int i=0;i<100000;++i){// print some idz
-//					System.out.println(logootEngine
-//					.getIdTable().get(i));
-//				}
+				for (int i = 0; i < 100000; ++i) {// print some idz
+					System.out.println(logootEngine.getIdTable().get(i));
+				}
 				ArrayList<Positions> idTable = (ArrayList<Positions>) logootEngine
 						.getIdTable();
 				HashMap<Positions, FakeListNode> spectrum = logootEngine

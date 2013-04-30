@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import alma.fr.basecomponents.IBase;
 import alma.fr.data.Positions;
+import alma.fr.logootenginecomponents.Replica;
 import alma.fr.strategiescomponents.IIdProviderStrategy;
 
 import com.google.inject.Inject;
@@ -27,7 +28,7 @@ public class SingleStrategyChoice implements IStrategyChoice {
 	}
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Integer rep) {
+			Integer N, Replica rep) {
 		// #1: process the index and interval values
 		BigInteger interval = BigInteger.ZERO;
 		int index = 0;
@@ -35,6 +36,7 @@ public class SingleStrategyChoice implements IStrategyChoice {
 			// #1 a: obtain index value
 			++index;
 			// #1 b: obtain interval value
+
 			interval = base.interval(p.getD(), q.getD(), index);
 		}
 

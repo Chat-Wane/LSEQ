@@ -22,7 +22,7 @@ public class LogootEngine implements ILogootEngine {
 	@Inject
 	public static IBase base;
 
-	private Integer replica;
+	private Replica replica;
 
 	@Inject
 	private IStrategyChoice strategyChoice;
@@ -35,12 +35,17 @@ public class LogootEngine implements ILogootEngine {
 		LogootEngine.base = base;
 		this.strategyChoice = strategyChoice;
 
+		ArrayList<Integer> source = new ArrayList<Integer>();
+		source.add(0);
+		ArrayList<Integer> clock = new ArrayList<Integer>();
+		clock.add(0);
+
 		Positions first = new Positions(BigInteger.ZERO,
-				LogootEngine.base.getBaseBase(), 1, -666);
+				LogootEngine.base.getBaseBase(), source, clock);
 
 		Positions last = new Positions(BigInteger.valueOf(2)
 				.pow(LogootEngine.base.getBaseBase()).subtract(BigInteger.ONE),
-				base.getBaseBase(), 1, 666);
+				base.getBaseBase(), source, clock);
 
 		idTable = new ArrayList<Positions>();
 		idTable.add(first);
@@ -160,7 +165,7 @@ public class LogootEngine implements ILogootEngine {
 		this.idTable = idTable;
 	}
 
-	public void setReplica(Integer replica) {
+	public void setReplica(Replica replica) {
 		this.replica = replica;
 	}
 
@@ -176,7 +181,7 @@ public class LogootEngine implements ILogootEngine {
 		return base;
 	}
 
-	public Integer getReplica() {
+	public Replica getReplica() {
 		return replica;
 	}
 

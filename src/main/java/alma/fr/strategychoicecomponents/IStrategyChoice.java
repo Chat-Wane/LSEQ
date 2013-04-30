@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import alma.fr.data.Positions;
+import alma.fr.logootenginecomponents.Replica;
 
 public interface IStrategyChoice {
 
@@ -22,7 +23,7 @@ public interface IStrategyChoice {
 	 * @return list of unique identifiers which can be used in logoot
 	 */
 	public Iterator<Positions> generateIdentifiers(Positions p,
-			Positions q, Integer N, Integer rep);
+			Positions q, Integer N, Replica rep);
 
 	/**
 	 * Add data to the strategy choice

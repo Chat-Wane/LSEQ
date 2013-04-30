@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import alma.fr.basecomponents.BaseSimple;
 import alma.fr.basecomponents.Basebase;
 import alma.fr.basecomponents.IBase;
+import alma.fr.strategiescomponents.BeginningBoundaryIdProvider;
 import alma.fr.strategiescomponents.EndingBoundaryIdProvider;
 import alma.fr.strategiescomponents.IIdProviderStrategy;
 import alma.fr.strategiescomponents.boundary.BoundaryValue;
@@ -37,7 +38,7 @@ public class WeissModule implements Module {
 
 		/* STRATEGY CHOICE */
 		binder.bind(IIdProviderStrategy.class).to(
-				EndingBoundaryIdProvider.class);
+				BeginningBoundaryIdProvider.class);
 		binder.bind(IStrategyChoice.class).to(SingleStrategyChoice.class);
 
 	}

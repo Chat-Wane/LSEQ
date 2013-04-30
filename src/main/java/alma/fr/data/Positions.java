@@ -1,104 +1,84 @@
 package alma.fr.data;
 
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import alma.fr.logootenginecomponents.LogootEngine;
 
+/**
+ * 
+ * A Logoot identifier as it iz in Weiss Thesis & logoot undo at TPDS
+ * 
+ */
 public class Positions implements Comparable<Positions> {
 
 	private final BigInteger d; // position
-	private final Integer s; // source
+	private final ArrayList<Integer> s; // sources
+	private final ArrayList<Integer> c; // clocks
 
 	// used in case of equality due to concurrence
-	private final Integer b; // biase
-	private final boolean[] dim; // change dim or not
 
-	public Positions(BigInteger r, int bitSize, int size, int s) {
+	public Positions(BigInteger r, int bitSize, ArrayList<Integer> s,
+			ArrayList<Integer> c) {
 		this.d = r.setBit(bitSize); // set the departure bit to 1. Thus the 0 in
 		// front won't be automatically truncated by
 		// BigInteger
 		this.s = s;
-		this.b = 0;
-		this.dim = new boolean[size];
+		this.c = c;
 	}
 
 	public BigInteger getD() {
 		return d;
 	}
 
-	public int getB() {
-		return b;
-	}
-
-	public boolean[] getDim() {
-		return dim;
-	}
-
-	public boolean atDim(int index) {
-		if (dim.length > index) {
-			return dim[index];
-		} else {
-			return false; // def value
-		}
-	}
-
-	public Integer getS() {
+	public ArrayList<Integer> getS() {
 		return s;
 	}
 
+	public ArrayList<Integer> getC() {
+		return c;
+	}
+
 	public int compareTo(Positions o) {
-		// #1 diff on dimension
-		// extract the common root for both id
-		int i = 0;
-		while ((dim.length > i || o.dim.length > i) && atDim(i) == o.atDim(i)) {
-			++i;
+		Integer mineSize = getC().size();
+		Integer otheSize = o.getC().size();
+		// #1 Compare the list of <d,s,c>
+		for (int i = 0; i < Math.min(mineSize, otheSize); ++i) {
+			// can stop before the end of for loop wiz return
+			int sum = LogootEngine.base.getSumBit(i + 1) + 1;
+			// #1a truncate mine
+			BigInteger mine = getD().shiftRight(getD().bitLength() - sum);
+			// #1b truncate other
+			BigInteger other = o.getD().shiftRight(o.getD().bitLength() - sum);
+			// #2 Compare digit part
+			int comp = mine.compareTo(other);
+			if (comp != 0) {
+				return comp;
+			}
+
 		}
 
-		// #2 truncate or extend until getSumBit(i)
-		int nbBitToCompare = LogootEngine.base.getSumBit(i + 1) + 1; // +1: for
-																		// first
-																		// bit
-																		// of
-		// idz
-
-		// #2a truncate
-		int myBitLength = d.bitLength();
-		int otBitLength = o.d.bitLength();
-
-		BigInteger mine = d.shiftLeft(nbBitToCompare - myBitLength);
-		BigInteger other = o.d.shiftLeft(nbBitToCompare - otBitLength);
-
-		// #3 compare digit
-		int comp = mine.compareTo(other);
+		// #2 Compare size of lists
+		int comp = ((Integer) getC().size()).compareTo(o.getC().size());
 		if (comp != 0) {
 			return comp;
 		}
-		// else common roots are equal
 
-		// #4 compare bitset
-		if (atDim(i + 1)) { // true
-			return -1;
-		} else if (o.atDim(i + 1)) {
-			return 1;
-		}
-		// else two == 0 cuz i> length
-
-		// #5 compare biase
-		comp = ((Integer) (s + b)).compareTo(o.s + o.b);
-		if (comp != 0) { // s != o.s
+		int i = Math.min(mineSize, otheSize) - 1;
+		// #3 desambuigize wiz source clock TODO: think about startin from root
+		comp = getS().get(i).compareTo(o.getS().get(i));
+		if (comp != 0) {
 			return comp;
 		} else {
-			// #6 compare source alone
-			return s.compareTo(o.s);
+			comp = getC().get(i).compareTo(o.getC().get(i));
+			return comp;
 		}
-
 	}
 
 	public String reNumberInDec() {
 		String result = "<< ";
 		int maxNbBit = d.bitLength();
-		for (int i = 0; i < dim.length; ++i) {
+		for (int i = 0; i < c.size(); ++i) {
 			int nbBits = LogootEngine.base.getSumBit(i + 1) + 1; // 1 = first
 																	// bit of d
 			BigInteger tempDigit = d.shiftRight(maxNbBit - nbBits);
@@ -113,7 +93,7 @@ public class Positions implements Comparable<Positions> {
 
 	@Override
 	public String toString() {
-		return "<d" + reNumberInDec() + "; s " + s + "; b " + b.toString()
-				+ "; dim" + dim.length + " " + Arrays.toString(dim) + ">";
+		return "<d" + reNumberInDec() + "; s " + s.toString() + "; c "
+				+ c.toString() + ">";
 	}
 }

@@ -43,19 +43,27 @@ public class BaseDouble implements IBase {
 
 		// #1 truncate or add
 		// #1a: on previous digit
+		// if (prevBitLength < bitBaseSum): Add 0
+		// if (prevBitLength > bitBaseSum): truncate
 		BigInteger prev;
-		if (prevBitLength < bitBaseSum) { // Add 0
-			prev = p.shiftLeft(bitBaseSum - prevBitLength);
-		} else {
-			prev = p.shiftRight(prevBitLength - bitBaseSum);
-		}
+		prev = p.shiftLeft(bitBaseSum - prevBitLength);
 
 		// #1b: on next digit
+		// #1c: compute particular case: q.size < p.size & their q.size'th
+		// digits are equal
+		boolean comp = (nextBitLength < bitBaseSum)
+				&& (nextBitLength <= prevBitLength)
+				&& (p.shiftRight(p.bitLength() - q.bitLength()).equals(q));
+
+		// if (nextBitLength < bitBaseSum) add 0 or 1
+		// if (nextBitLength > bitBaseSum) truncate
 		BigInteger next;
-		if (nextBitLength < bitBaseSum) { // Add 0
+		if (!comp) {// add 0 or truncate
 			next = q.shiftLeft(bitBaseSum - nextBitLength);
-		} else {
-			next = q.shiftRight(nextBitLength - bitBaseSum);
+		} else { // add 1
+			next = (q.shiftLeft(bitBaseSum - nextBitLength))
+					.add(BigInteger.valueOf(2).pow(getBitBase(index))
+							.subtract(BigInteger.ONE));
 		}
 
 		return next.subtract(prev).subtract(BigInteger.ONE);

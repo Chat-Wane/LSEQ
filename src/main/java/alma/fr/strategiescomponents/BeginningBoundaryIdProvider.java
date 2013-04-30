@@ -7,10 +7,12 @@ import java.util.Random;
 
 import alma.fr.data.Positions;
 import alma.fr.logootenginecomponents.LogootEngine;
+import alma.fr.logootenginecomponents.Replica;
 import alma.fr.strategiescomponents.boundary.IBoundary;
 
 import com.google.inject.Inject;
 
+/** boundary+ **/
 public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 
 	private Random rand = new Random();
@@ -24,9 +26,10 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 	}
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
-			Integer N, Integer rep, BigInteger interval, int index) {
+			Integer N, Replica rep, BigInteger interval, int index) {
+		//System.out.println("p=" + p);
+		//System.out.println("q=" + q);
 		ArrayList<Positions> positions = new ArrayList<Positions>();
-
 		// #0 process the interval for random
 		BigInteger step = interval.divide(BigInteger.valueOf(N));
 		step = (step.min(boundary.getBoundary(index))).max(BigInteger
@@ -55,8 +58,11 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 			}
 			// // Construct
 			BigInteger newR = LogootEngine.base.add(r, randomInt);
+			rep.setClock(rep.getClock() + 1);
+			ArrayList<Integer> s = getS(newR, index, p, q, rep);
+			ArrayList<Integer> c = getC(newR, index, p, q, rep);
 			Positions tempPositions = new Positions(newR,
-					LogootEngine.base.getSumBit(index),index, rep);
+					LogootEngine.base.getSumBit(index), s, c);
 			positions.add(tempPositions);
 			r = LogootEngine.base.add(r, step);
 		}
@@ -64,4 +70,59 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 		return positions.iterator();
 	}
 
+	public ArrayList<Integer> getS(BigInteger r, Integer index, Positions p,
+			Positions q, Replica rep) {
+		ArrayList<Integer> sources = new ArrayList<Integer>();
+		BigInteger tempR = r.setBit(LogootEngine.base.getSumBit(index));
+		int bitLength = tempR.bitLength() - 1;
+		for (int i = 0; i < index; ++i) {
+			int bitAtDepth = LogootEngine.base.getSumBit(i + 1);
+			int lowerBitLength = bitLength - bitAtDepth;
+			BigInteger lowerMask = BigInteger.valueOf(2).pow(lowerBitLength)
+					.subtract(BigInteger.ONE);
+			BigInteger mask = BigInteger.valueOf(2)
+					.pow(LogootEngine.base.getBitBase(i + 1) + lowerBitLength)
+					.subtract(BigInteger.ONE).subtract(lowerMask);
+			if (p.getS().size() > i && r.and(mask).equals(p.getD().and(mask))) { // copy
+																					// p
+																					// site
+				sources.add(p.getS().get(i));
+			} else if (q.getS().size() > i
+					&& r.and(mask).equals(q.getD().and(mask))) { // copy q
+				// site){
+				sources.add(q.getS().get(i));
+			} else { // copy our own source
+				sources.add(rep.getId());
+			}
+		}
+		return sources;
+	}
+
+	public ArrayList<Integer> getC(BigInteger r, Integer index, Positions p,
+			Positions q, Replica rep) {
+		ArrayList<Integer> clocks = new ArrayList<Integer>();
+		BigInteger tempR = r.setBit(LogootEngine.base.getSumBit(index));
+		int bitLength = tempR.bitLength() - 1;
+		for (int i = 0; i < index; ++i) {
+			int bitAtDepth = LogootEngine.base.getSumBit(i + 1);
+			int lowerBitLength = bitLength - bitAtDepth;
+			BigInteger lowerMask = BigInteger.valueOf(2).pow(lowerBitLength)
+					.subtract(BigInteger.ONE);
+			BigInteger mask = BigInteger.valueOf(2)
+					.pow(LogootEngine.base.getBitBase(i + 1) + lowerBitLength)
+					.subtract(BigInteger.ONE).subtract(lowerMask);
+			if (p.getC().size() > i && r.and(mask).equals(p.getD().and(mask))) { // copy
+																					// p
+																					// site
+				clocks.add(p.getC().get(i));
+			} else if (q.getC().size() > i
+					&& r.and(mask).equals(q.getD().and(mask))) { // copy q
+				// site){
+				clocks.add(q.getC().get(i));
+			} else { // copy our own source
+				clocks.add(rep.getClock());
+			}
+		}
+		return clocks;
+	}
 }
