@@ -10,7 +10,7 @@ import alma.fr.data.Positions;
 import alma.fr.documentgenerator.WikipediaDocument;
 import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.logootenginecomponents.Replica;
-import alma.fr.modules.WeissModule;
+import alma.fr.modules.GreedRandDoubleModule;
 import alma.fr.strategychoicecomponents.IStrategyChoice;
 import alma.fr.view.MultipleChartView;
 
@@ -33,11 +33,11 @@ public class RunWiki {
 
 		/*********************************/
 
-		 injector = Guice.createInjector(new WeissModule());
+		// injector = Guice.createInjector(new WeissModule());
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
 		// injector = Guice.createInjector(new GreedDoubleModule());
-		//injector = Guice.createInjector(new GreedRandDoubleModule());
+		injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
 		logootEngine.setReplica(new Replica());

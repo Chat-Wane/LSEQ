@@ -13,7 +13,7 @@ import alma.fr.strategiescomponents.boundary.IBoundary;
 
 import com.google.inject.Inject;
 
-/** boundary-**/
+/** boundary- **/
 public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 
 	private Random rand = new Random();
@@ -36,11 +36,29 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 		step = (step.min(boundary.getBoundary(index))).max(BigInteger
 				.valueOf(1));
 
-		// #1 Truncate tail or add bits
+		// #1a Truncate tail or add bits
 		int nextBitCount = q.getD().bitLength() - 1;
-		int diffBitCount = nextBitCount - LogootEngine.base.getSumBit(index);
+		int bitBaseSum = LogootEngine.base.getSumBit(index);
 
-		BigInteger r = q.getD().shiftRight(diffBitCount);
+		// #1b special case into account
+		boolean comp = (nextBitCount < bitBaseSum)
+				&& (nextBitCount <= p.getD().bitLength())
+				&& (p.getD().shiftRight(
+						p.getD().bitLength() - q.getD().bitLength()).equals(q
+						.getD()));
+
+		BigInteger r;
+		if (!comp) { // add 0 or truncate
+			r = q.getD().shiftRight(nextBitCount - bitBaseSum);
+		} else { // add 1
+			r = q.getD()
+					.shiftRight(nextBitCount - bitBaseSum)
+					.add(BigInteger.valueOf(2)
+							.pow(LogootEngine.base.getBitBase(index))
+							.subtract(BigInteger.ONE));
+			;
+		}
+
 		// #2 create position by adding a random value; N times
 		for (int j = 0; j < N; ++j) {
 			BigInteger randomInt;

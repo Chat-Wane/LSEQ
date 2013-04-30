@@ -12,10 +12,11 @@ import alma.fr.data.Positions;
 import alma.fr.documentgenerator.BeginningGenerator;
 import alma.fr.documentgenerator.DocumentSimulator;
 import alma.fr.documentgenerator.EndingGenerator;
+import alma.fr.documentgenerator.RandomGenerator;
 import alma.fr.documentgenerator.VGenerator;
 import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.logootenginecomponents.Replica;
-import alma.fr.modules.WeissModule;
+import alma.fr.modules.GreedDoubleModule;
 import alma.fr.strategychoicecomponents.FakeListNode;
 
 import com.google.inject.Guice;
@@ -34,10 +35,10 @@ public class App {
 
 		/*********************************/
 
-		injector = Guice.createInjector(new WeissModule());
+		// injector = Guice.createInjector(new WeissModule());
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
-		// injector = Guice.createInjector(new GreedDoubleModule());
+		injector = Guice.createInjector(new GreedDoubleModule());
 		// injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
@@ -45,8 +46,9 @@ public class App {
 
 		BeginningGenerator bg = new BeginningGenerator();
 		EndingGenerator eg = new EndingGenerator();
+		RandomGenerator rg = new RandomGenerator();
 		VGenerator vg = new VGenerator();
-		ds = new DocumentSimulator(eg);
+		ds = new DocumentSimulator(rg);
 
 		while (true) {
 			ds.setNbPatch(10000);
