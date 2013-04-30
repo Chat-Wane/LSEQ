@@ -103,7 +103,6 @@ public class RunWiki {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public static Float[] avgAndMaxBitSize(List<Positions> logootIdTable) {

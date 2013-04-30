@@ -38,6 +38,8 @@ public class RoundRobinStrategyChoice implements IStrategyChoice {
 		// #1 count interval between p and q, until itz enough
 		BigInteger interval = BigInteger.ZERO;
 		int index = 0;
+		System.out.println("p="+p);
+		System.out.println("q="+q);
 		while (BigInteger.valueOf(N).compareTo(interval) > 0) {
 			// #1 a: obtain index value
 			++index;

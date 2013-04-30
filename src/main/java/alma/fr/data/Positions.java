@@ -51,7 +51,15 @@ public class Positions implements Comparable<Positions> {
 			// #1b truncate other
 			BigInteger other = o.getD().shiftRight(o.getD().bitLength() - sum);
 			// #2 Compare digit part
-			int comp = mine.compareTo(other);
+			int comp = mine.compareTo(other); // DIGIT
+			if (comp != 0) {
+				return comp;
+			}
+			comp = getS().get(i).compareTo(o.getS().get(i)); // SOURCE
+			if (comp != 0) {
+				return comp;
+			}
+			comp = getC().get(i).compareTo(o.getC().get(i)); // CLOCK
 			if (comp != 0) {
 				return comp;
 			}
@@ -59,20 +67,8 @@ public class Positions implements Comparable<Positions> {
 		}
 
 		// #2 Compare size of lists
-		int comp = ((Integer) getC().size()).compareTo(o.getC().size());
-		if (comp != 0) {
-			return comp;
-		}
+		return mineSize.compareTo(otheSize);
 
-		int i = Math.min(mineSize, otheSize) - 1;
-		// #3 desambuigize wiz source clock TODO: think about startin from root
-		comp = getS().get(i).compareTo(o.getS().get(i));
-		if (comp != 0) {
-			return comp;
-		} else {
-			comp = getC().get(i).compareTo(o.getC().get(i));
-			return comp;
-		}
 	}
 
 	public String reNumberInDec() {

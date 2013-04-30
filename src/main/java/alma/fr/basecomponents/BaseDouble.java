@@ -45,27 +45,27 @@ public class BaseDouble implements IBase {
 		// #1a: on previous digit
 		// if (prevBitLength < bitBaseSum): Add 0
 		// if (prevBitLength > bitBaseSum): truncate
-		BigInteger prev;
-		prev = p.shiftLeft(bitBaseSum - prevBitLength);
+		BigInteger prev = p.shiftLeft(bitBaseSum - prevBitLength);
+		// #2a: on next digit
+		BigInteger next = q.shiftLeft(bitBaseSum - nextBitLength);
 
-		// #1b: on next digit
-		// #1c: compute particular case: q.size < p.size & their q.size'th
-		// digits are equal
-		boolean comp = (nextBitLength < bitBaseSum)
-				&& (nextBitLength <= prevBitLength)
-				&& (p.shiftRight(p.bitLength() - q.bitLength()).equals(q));
-
-		// if (nextBitLength < bitBaseSum) add 0 or 1
-		// if (nextBitLength > bitBaseSum) truncate
-		BigInteger next;
-		if (!comp) {// add 0 or truncate
-			next = q.shiftLeft(bitBaseSum - nextBitLength);
-		} else { // add 1
-			next = (q.shiftLeft(bitBaseSum - nextBitLength))
-					.add(BigInteger.valueOf(2).pow(getBitBase(index))
-							.subtract(BigInteger.ONE));
+		// #2b: compute particular case: p>=q at depth "index"
+		if (next.compareTo(prev) < 0) {
+			// #1c: search the common root & add one
+			int i = 1;
+			int sumBitI = getSumBit(i);
+			while (prev.shiftRight(prev.bitLength() - 1 - sumBitI).equals(
+					next.shiftRight(next.bitLength() - 1 - sumBitI))
+					&& (next.bitLength() - 1 - sumBitI >= 0)) {
+				++i;
+				sumBitI = getSumBit(i);
+			} // the common root is defined until a depth of i-1
+				// #1d: get the common root and add 1
+			next = (next.shiftRight(next.bitLength() - 1 - getSumBit(i - 1)))
+					.add(BigInteger.ONE);
+			// #1e: append some 0
+			next = next.shiftLeft(bitBaseSum - next.bitLength() + 1);
 		}
-
 		return next.subtract(prev).subtract(BigInteger.ONE);
 	}
 }

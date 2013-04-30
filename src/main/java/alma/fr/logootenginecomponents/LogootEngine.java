@@ -61,9 +61,9 @@ public class LogootEngine implements ILogootEngine {
 		for (MyDelta delta : patch) {
 			Integer position;
 
-			// System.out.println(idTable);
-			// System.out.println("==========");
-			// System.out.println(delta.getId());
+//			System.out.println(idTable.toString().replaceAll(">, <",">\n <"));
+//			System.out.println("==========");
+//			System.out.println(delta.getId());
 			switch (delta.getType()) {
 			case INSERT:
 				one_insert = true;

@@ -27,8 +27,8 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 
 	public Iterator<Positions> generateIdentifiers(Positions p, Positions q,
 			Integer N, Replica rep, BigInteger interval, int index) {
-		//System.out.println("p=" + p);
-		//System.out.println("q=" + q);
+		// System.out.println("p=" + p);
+		// System.out.println("q=" + q);
 		ArrayList<Positions> positions = new ArrayList<Positions>();
 		// #0 process the interval for random
 		BigInteger step = interval.divide(BigInteger.valueOf(N));
@@ -75,24 +75,29 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 		ArrayList<Integer> sources = new ArrayList<Integer>();
 		BigInteger tempR = r.setBit(LogootEngine.base.getSumBit(index));
 		int bitLength = tempR.bitLength() - 1;
+
 		for (int i = 0; i < index; ++i) {
-			int bitAtDepth = LogootEngine.base.getSumBit(i + 1);
-			int lowerBitLength = bitLength - bitAtDepth;
-			BigInteger lowerMask = BigInteger.valueOf(2).pow(lowerBitLength)
-					.subtract(BigInteger.ONE);
+			// #1 truncate the r to get the i th value
+			int sumBit = LogootEngine.base.getSumBit(i + 1);
 			BigInteger mask = BigInteger.valueOf(2)
-					.pow(LogootEngine.base.getBitBase(i + 1) + lowerBitLength)
-					.subtract(BigInteger.ONE).subtract(lowerMask);
-			if (p.getS().size() > i && r.and(mask).equals(p.getD().and(mask))) { // copy
-																					// p
-																					// site
+					.pow(LogootEngine.base.getBitBase(i + 1))
+					.subtract(BigInteger.ONE);
+			BigInteger valR = tempR.shiftRight(bitLength - sumBit).and(mask); // bitLength-sumBit
+																				// >=0
+			// #2 truncate previous value the same way
+			BigInteger valP = p.getD()
+					.shiftRight(p.getD().bitLength() - 1 - sumBit).and(mask);
+			if (p.getC().size() > i && valR.equals(valP)) { // copy p site
 				sources.add(p.getS().get(i));
-			} else if (q.getS().size() > i
-					&& r.and(mask).equals(q.getD().and(mask))) { // copy q
-				// site){
-				sources.add(q.getS().get(i));
-			} else { // copy our own source
-				sources.add(rep.getId());
+			} else {
+				BigInteger valQ = q.getD()
+						.shiftRight(q.getD().bitLength() - 1 - sumBit)
+						.and(mask);
+				if (q.getC().size() > i && valR.equals(valQ)) { // copy q site
+					sources.add(q.getS().get(i));
+				} else { // copy our own source
+					sources.add(new Integer(rep.getId()));
+				}
 			}
 		}
 		return sources;
@@ -103,26 +108,35 @@ public class BeginningBoundaryIdProvider implements IIdProviderStrategy {
 		ArrayList<Integer> clocks = new ArrayList<Integer>();
 		BigInteger tempR = r.setBit(LogootEngine.base.getSumBit(index));
 		int bitLength = tempR.bitLength() - 1;
+
 		for (int i = 0; i < index; ++i) {
-			int bitAtDepth = LogootEngine.base.getSumBit(i + 1);
-			int lowerBitLength = bitLength - bitAtDepth;
-			BigInteger lowerMask = BigInteger.valueOf(2).pow(lowerBitLength)
-					.subtract(BigInteger.ONE);
+			// #1 truncate the r to get the i th value
+			int sumBit = LogootEngine.base.getSumBit(i + 1);
 			BigInteger mask = BigInteger.valueOf(2)
-					.pow(LogootEngine.base.getBitBase(i + 1) + lowerBitLength)
-					.subtract(BigInteger.ONE).subtract(lowerMask);
-			if (p.getC().size() > i && r.and(mask).equals(p.getD().and(mask))) { // copy
-																					// p
-																					// site
+					.pow(LogootEngine.base.getBitBase(i + 1))
+					.subtract(BigInteger.ONE);
+			BigInteger valR = tempR.shiftRight(bitLength - sumBit).and(mask); // bitLength-sumBit
+																				// >=0
+			// #2 truncate previous value the same way
+			BigInteger valP = p.getD()
+					.shiftRight(p.getD().bitLength() - 1 - sumBit).and(mask);
+			// if valP = 0, it means that size is lower, 0 is not allowed by
+			// allocating strategy, so no need for further processing dan
+			// compare valuez
+			if (p.getC().size() > i && valR.equals(valP)) { // copy p site
 				clocks.add(p.getC().get(i));
-			} else if (q.getC().size() > i
-					&& r.and(mask).equals(q.getD().and(mask))) { // copy q
-				// site){
-				clocks.add(q.getC().get(i));
-			} else { // copy our own source
-				clocks.add(rep.getClock());
+			} else {
+				BigInteger valQ = q.getD()
+						.shiftRight(q.getD().bitLength() - 1 - sumBit)
+						.and(mask);
+				if (q.getC().size() > i && valR.equals(valQ)) { // copy q site
+					clocks.add(q.getC().get(i));
+				} else { // copy our own source
+					clocks.add(new Integer(rep.getClock()));
+				}
 			}
 		}
 		return clocks;
 	}
+
 }

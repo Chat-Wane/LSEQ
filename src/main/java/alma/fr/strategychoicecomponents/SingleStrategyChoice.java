@@ -32,11 +32,11 @@ public class SingleStrategyChoice implements IStrategyChoice {
 		// #1: process the index and interval values
 		BigInteger interval = BigInteger.ZERO;
 		int index = 0;
+
 		while (BigInteger.valueOf(N).compareTo(interval) > 0) {
 			// #1 a: obtain index value
 			++index;
 			// #1 b: obtain interval value
-
 			interval = base.interval(p.getD(), q.getD(), index);
 		}
 

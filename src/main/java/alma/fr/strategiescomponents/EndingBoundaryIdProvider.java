@@ -36,28 +36,38 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 		step = (step.min(boundary.getBoundary(index))).max(BigInteger
 				.valueOf(1));
 
-		// #1a Truncate tail or add bits
-		int nextBitCount = q.getD().bitLength() - 1;
+		int prevBitLength = p.getD().bitLength() - 1;
+		int nextBitLength = q.getD().bitLength() - 1;
+
 		int bitBaseSum = LogootEngine.base.getSumBit(index);
 
-		// #1b special case into account
-		boolean comp = (nextBitCount < bitBaseSum)
-				&& (nextBitCount <= p.getD().bitLength())
-				&& (p.getD().shiftRight(
-						p.getD().bitLength() - q.getD().bitLength()).equals(q
-						.getD()));
+		// #1 truncate or add
+		// #1a: on previous digit
+		// if (prevBitLength < bitBaseSum): Add 0
+		// if (prevBitLength > bitBaseSum): truncate
+		BigInteger prev = p.getD().shiftLeft(bitBaseSum - prevBitLength);
+		// #2a: on next digit
+		BigInteger next = q.getD().shiftLeft(bitBaseSum - nextBitLength);
 
-		BigInteger r;
-		if (!comp) { // add 0 or truncate
-			r = q.getD().shiftRight(nextBitCount - bitBaseSum);
-		} else { // add 1
-			r = q.getD()
-					.shiftRight(nextBitCount - bitBaseSum)
-					.add(BigInteger.valueOf(2)
-							.pow(LogootEngine.base.getBitBase(index))
-							.subtract(BigInteger.ONE));
-			;
+		// #2b: compute particular case: p>=q at depth "index"
+		if (next.compareTo(prev) < 0) {
+			// #1c: search the common root & add one
+			int i = 1;
+			int sumBitI = LogootEngine.base.getSumBit(i);
+			while (prev.shiftRight(prev.bitLength() - 1 - sumBitI).equals(
+					next.shiftRight(next.bitLength() - 1 - sumBitI))
+					&& (next.bitLength() - 1 - sumBitI >= 0)) {
+				++i;
+				sumBitI = LogootEngine.base.getSumBit(i);
+			} // the common root is defined until a depth of i-1
+				// #1d: get the common root and add 1
+			next = (next.shiftRight(next.bitLength() - 1
+					- LogootEngine.base.getSumBit(i - 1))).add(BigInteger.ONE);
+			// #1e: append some 0
+			next = next.shiftLeft(bitBaseSum - next.bitLength() + 1);
 		}
+
+		BigInteger r = next;
 
 		// #2 create position by adding a random value; N times
 		for (int j = 0; j < N; ++j) {
@@ -93,24 +103,29 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 		ArrayList<Integer> sources = new ArrayList<Integer>();
 		BigInteger tempR = r.setBit(LogootEngine.base.getSumBit(index));
 		int bitLength = tempR.bitLength() - 1;
+
 		for (int i = 0; i < index; ++i) {
-			int bitAtDepth = LogootEngine.base.getSumBit(i + 1);
-			int lowerBitLength = bitLength - bitAtDepth;
-			BigInteger lowerMask = BigInteger.valueOf(2).pow(lowerBitLength)
-					.subtract(BigInteger.ONE);
+			// #1 truncate the r to get the i th value
+			int sumBit = LogootEngine.base.getSumBit(i + 1);
 			BigInteger mask = BigInteger.valueOf(2)
-					.pow(LogootEngine.base.getBitBase(i + 1) + lowerBitLength)
-					.subtract(BigInteger.ONE).subtract(lowerMask);
-			if (p.getS().size() > i && r.and(mask).equals(p.getD().and(mask))) { // copy
-																					// p
-																					// site
+					.pow(LogootEngine.base.getBitBase(i + 1))
+					.subtract(BigInteger.ONE);
+			BigInteger valR = tempR.shiftRight(bitLength - sumBit).and(mask); // bitLength-sumBit
+																				// >=0
+			// #2 truncate previous value the same way
+			BigInteger valP = p.getD()
+					.shiftRight(p.getD().bitLength() - 1 - sumBit).and(mask);
+			if (p.getC().size() > i && valR.equals(valP)) { // copy p site
 				sources.add(p.getS().get(i));
-			} else if (q.getS().size() > i
-					&& r.and(mask).equals(q.getD().and(mask))) { // copy q
-				// site){
-				sources.add(q.getS().get(i));
-			} else { // copy our own source
-				sources.add(rep.getId());
+			} else {
+				BigInteger valQ = q.getD()
+						.shiftRight(q.getD().bitLength() - 1 - sumBit)
+						.and(mask);
+				if (q.getC().size() > i && valR.equals(valQ)) { // copy q site
+					sources.add(q.getS().get(i));
+				} else { // copy our own source
+					sources.add(new Integer(rep.getId()));
+				}
 			}
 		}
 		return sources;
@@ -121,24 +136,32 @@ public class EndingBoundaryIdProvider implements IIdProviderStrategy {
 		ArrayList<Integer> clocks = new ArrayList<Integer>();
 		BigInteger tempR = r.setBit(LogootEngine.base.getSumBit(index));
 		int bitLength = tempR.bitLength() - 1;
+
 		for (int i = 0; i < index; ++i) {
-			int bitAtDepth = LogootEngine.base.getSumBit(i + 1);
-			int lowerBitLength = bitLength - bitAtDepth;
-			BigInteger lowerMask = BigInteger.valueOf(2).pow(lowerBitLength)
-					.subtract(BigInteger.ONE);
+			// #1 truncate the r to get the i th value
+			int sumBit = LogootEngine.base.getSumBit(i + 1);
 			BigInteger mask = BigInteger.valueOf(2)
-					.pow(LogootEngine.base.getBitBase(i + 1) + lowerBitLength)
-					.subtract(BigInteger.ONE).subtract(lowerMask);
-			if (p.getC().size() > i && r.and(mask).equals(p.getD().and(mask))) { // copy
-																					// p
-																					// site
+					.pow(LogootEngine.base.getBitBase(i + 1))
+					.subtract(BigInteger.ONE);
+			BigInteger valR = tempR.shiftRight(bitLength - sumBit).and(mask); // bitLength-sumBit
+																				// >=0
+			// #2 truncate previous value the same way
+			BigInteger valP = p.getD()
+					.shiftRight(p.getD().bitLength() - 1 - sumBit).and(mask);
+			// if valP = 0, it means that size is lower, 0 is not allowed by
+			// allocating strategy, so no need for further processing dan
+			// compare valuez
+			if (p.getC().size() > i && valR.equals(valP)) { // copy p site
 				clocks.add(p.getC().get(i));
-			} else if (q.getC().size() > i
-					&& r.and(mask).equals(q.getD().and(mask))) { // copy q
-				// site){
-				clocks.add(q.getC().get(i));
-			} else { // copy our own source
-				clocks.add(rep.getClock());
+			} else {
+				BigInteger valQ = q.getD()
+						.shiftRight(q.getD().bitLength() - 1 - sumBit)
+						.and(mask);
+				if (q.getC().size() > i && valR.equals(valQ)) { // copy q site
+					clocks.add(q.getC().get(i));
+				} else { // copy our own source
+					clocks.add(new Integer(rep.getClock()));
+				}
 			}
 		}
 		return clocks;

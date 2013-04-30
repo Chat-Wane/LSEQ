@@ -16,7 +16,7 @@ import alma.fr.documentgenerator.RandomGenerator;
 import alma.fr.documentgenerator.VGenerator;
 import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.logootenginecomponents.Replica;
-import alma.fr.modules.GreedDoubleModule;
+import alma.fr.modules.GreedRandDoubleModule;
 import alma.fr.strategychoicecomponents.FakeListNode;
 
 import com.google.inject.Guice;
@@ -38,8 +38,8 @@ public class App {
 		// injector = Guice.createInjector(new WeissModule());
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
-		injector = Guice.createInjector(new GreedDoubleModule());
-		// injector = Guice.createInjector(new GreedRandDoubleModule());
+		// injector = Guice.createInjector(new GreedDoubleModule());
+		injector = Guice.createInjector(new GreedRandDoubleModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
 		logootEngine.setReplica(new Replica()); // whatever
@@ -48,7 +48,7 @@ public class App {
 		EndingGenerator eg = new EndingGenerator();
 		RandomGenerator rg = new RandomGenerator();
 		VGenerator vg = new VGenerator();
-		ds = new DocumentSimulator(rg);
+		ds = new DocumentSimulator(vg);
 
 		while (true) {
 			ds.setNbPatch(10000);
@@ -62,9 +62,9 @@ public class App {
 			System.out.println("max bitSize = " + results[1]);
 
 			if (DocumentSimulator.getNbLine() == 100000) {
-				for (int i = 0; i < 100000; ++i) {// print some idz
-					System.out.println(logootEngine.getIdTable().get(i));
-				}
+				// for (int i = 0; i < 100000; ++i) {// print some idz
+				// System.out.println(logootEngine.getIdTable().get(i));
+				// }
 				ArrayList<Positions> idTable = (ArrayList<Positions>) logootEngine
 						.getIdTable();
 				HashMap<Positions, FakeListNode> spectrum = logootEngine
