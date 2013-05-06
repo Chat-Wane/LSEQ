@@ -1,18 +1,19 @@
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
 
  <groupId>alma.fr</groupId>
- <artifactId>LogootComponents</artifactId>
+ <artifactId>LSEQ</artifactId>
  <version>1.0-SNAPSHOT</version>
  <packaging>jar</packaging>
 
- <name>wikiExtractor</name>
+ <name>WikiExtractor</name>
  <url>http://maven.apache.org</url>
 
  <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- github server corresponds to entry in ~/.m2/settings.xml -->
+    <github.global.server>github</github.global.server>
  </properties>
 
  <dependencies>
@@ -45,6 +46,14 @@
    
  </dependencies>
 
+<distributionManagement>
+    <repository>
+        <id>github</id>
+        <name>GitHub ${project.artifactId} Repository</name>
+        <url>https://raw.github.com/Chat-Wane/${project.artifactId}/mvn-repo</url>
+    </repository>
+</distributionManagement>
+
  <build>
     <plugins>
      <plugin>
@@ -52,28 +61,44 @@
        <artifactId>maven-jar-plugin</artifactId>
      </plugin>
      <plugin>
-       <artifactId>maven-assembly-plugin</artifactId>
-       <version>2.3</version>
+       <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+        <configuration>
+        <altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+        </configuration>
+     </plugin>
+     
+     <plugin>
+       <groupId>com.github.github</groupId>
+       <artifactId>site-maven-plugin</artifactId>
+       <version>0.7</version>
        <configuration>
-         <descriptorRefs>
-           <descriptorRef>jar-with-dependencies</descriptorRef>
-         </descriptorRefs>
-         <archive>
-           <manifest>
-             <mainClass>alma.fr.App</mainClass>
-           </manifest>
-         </archive>
+           <message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+           <noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+           <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+           <branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+           <includes><include>**/*</include></includes>
+           <repositoryName>LSEQ</repositoryName>      <!-- github repo name -->
+           <repositoryOwner>Chat-Wane</repositoryOwner>    <!-- github username  -->
        </configuration>
        <executions>
+         <!-- run site-maven-plugin's 'site' target as part of the build's normal 'deploy' phase -->
          <execution>
-           <id>make-assembly</id> <!-- this is used for inheritance merges -->
-           <phase>package</phase> <!-- bind to the packaging phase -->
            <goals>
-             <goal>single</goal>
+             <goal>site</goal>
            </goals>
+           <phase>deploy</phase>
          </execution>
        </executions>
-     </plugin>
+       <dependencies>
+           <dependency>
+               <groupId>org.eclipse.mylyn.github</groupId>
+               <artifactId>org.eclipse.egit.github.core</artifactId>
+               <version>2.0.3</version>
+           </dependency>            
+       </dependencies>   
+   </plugin>
+     
     </plugins>
  </build>
 
