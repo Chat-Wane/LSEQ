@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>alma.fr</groupId>
+  <artifactId>LSEQ</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <timestamp>20130506.125532</timestamp>
+      <buildNumber>1</buildNumber>
+    </snapshot>
+    <lastUpdated>20130506125532</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>1.0-20130506.125532-1</value>
+        <updated>20130506125532</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>1.0-20130506.125532-1</value>
+        <updated>20130506125532</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <classifier>jar-with-dependencies</classifier>
+        <extension>jar</extension>
+        <value>1.0-20130506.125532-1</value>
+        <updated>20130506125532</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>
