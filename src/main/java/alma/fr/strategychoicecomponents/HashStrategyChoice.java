@@ -1,7 +1,6 @@
 package alma.fr.strategychoicecomponents;
 
 import java.math.BigInteger;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -18,8 +17,8 @@ public class HashStrategyChoice implements IStrategyChoice {
 
 	private Integer date = 0;
 
-	BitSet strategies;
-
+	final long seed = 123456789;
+	
 	final Random r = new Random(123456789);
 
 	@Inject
@@ -35,7 +34,6 @@ public class HashStrategyChoice implements IStrategyChoice {
 		this.base = base;
 		this.strategy1 = strategy1;
 		this.strategy2 = strategy2;
-		strategies = new BitSet(0);
 	}
 
 	/** add the new id in the structure **/
@@ -85,21 +83,11 @@ public class HashStrategyChoice implements IStrategyChoice {
 			interval = base.interval(p.getD(), q.getD(), index);
 		}
 
-		// #2 if not already setted value in strategies
-		// random a full 64 bits of strategies, bitsize.size limitation
-		if (index >= strategies.size()) {
-			int sizeBefore = strategies.size();
-			strategies.set(strategies.size());
-			for (int j = sizeBefore; j < strategies.size(); ++j) {
-				if (r.nextBoolean()) {
-					strategies.set(j);
-				} else {
-					strategies.clear(j);
-				}
-			}
-		}
+		
+		boolean idStrat = new Random(seed*index).nextBoolean();
+		
 		// #3 chose the strategy
-		if (strategies.get(index)) {
+		if (idStrat) {
 			return strategy1.generateIdentifiers(p, q, N, rep, interval, index);
 		} else {
 			return strategy2.generateIdentifiers(p, q, N, rep, interval, index);

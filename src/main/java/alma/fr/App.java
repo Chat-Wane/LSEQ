@@ -16,7 +16,7 @@ import alma.fr.documentgenerator.RandomGenerator;
 import alma.fr.documentgenerator.VGenerator;
 import alma.fr.logootenginecomponents.LogootEngine;
 import alma.fr.logootenginecomponents.Replica;
-import alma.fr.modules.GreedRandDoubleModule;
+import alma.fr.modules.LSEQhashModule;
 import alma.fr.strategychoicecomponents.FakeListNode;
 
 import com.google.inject.Guice;
@@ -39,7 +39,8 @@ public class App {
 		// injector = Guice.createInjector(new GreedModule());
 		// injector = Guice.createInjector(new DoubleModule());
 		// injector = Guice.createInjector(new GreedDoubleModule());
-		injector = Guice.createInjector(new GreedRandDoubleModule());
+		// injector = Guice.createInjector(new GreedRandDoubleModule());
+		injector = Guice.createInjector(new LSEQhashModule());
 
 		logootEngine = injector.getInstance(LogootEngine.class);
 		logootEngine.setReplica(new Replica()); // whatever
